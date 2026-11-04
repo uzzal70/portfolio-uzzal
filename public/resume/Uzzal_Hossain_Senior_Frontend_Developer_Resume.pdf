@@ -1,0 +1,92 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1350 >>
+stream
+BT
+/F2 20 Tf
+50 740 Td
+(UZZAL HOSSAIN - SENIOR FRONTEND-FOCUSED FULL-STACK DEVELOPER) Tj
+/F1 10 Tf
+0 -18 Td
+(Dhaka, Bangladesh | contact@uzzal.dev | github.com/uzzaldev | linkedin.com/in/uzzaldev) Tj
+0 -25 Td
+/F2 13 Tf
+(PROFESSIONAL SUMMARY) Tj
+/F1 10 Tf
+0 -15 Td
+(Frontend-focused Full-Stack Developer with 3-5 years experience engineering scalable enterprise) Tj
+0 -13 Td
+(web applications, B2B multi-brand portals, and client-side document processing architectures.) Tj
+0 -13 Td
+(Strong mastery in React.js, Next.js, TypeScript, and Material UI v5, with practical backend knowledge) Tj
+0 -13 Td
+(in Node.js, NestJS, REST APIs, and PostgreSQL.) Tj
+0 -25 Td
+/F2 13 Tf
+(CORE TECHNICAL EXPERTISE) Tj
+/F1 10 Tf
+0 -15 Td
+(Frontend: React.js, Next.js, TypeScript, JavaScript (ES6+), Material UI v5, Redux Toolkit, Framer Motion) Tj
+0 -13 Td
+(Backend: Node.js, NestJS, Express.js, REST API Development, JWT Auth, RBAC, Error Handling) Tj
+0 -13 Td
+(Database & Tools: PostgreSQL, SQL, Git, GitHub, Docker Fundamentals, Postman, Vite, Sentry, Figma) Tj
+0 -25 Td
+/F2 13 Tf
+(PROFESSIONAL EXPERIENCE) Tj
+/F2 11 Tf
+0 -16 Td
+(Senior Frontend Developer | Travel Tech Innovations Ltd. | 2023 - Present) Tj
+/F1 10 Tf
+0 -13 Td
+(- Architected multi-brand frontend architecture powering B2B travel portals (TripFindy, Ticket Lagbe).) Tj
+0 -13 Td
+(- Reduced high-volume itinerary filter re-renders by 60% through normalized Redux and memoization.) Tj
+0 -13 Td
+(- Built client-side vector PDF flight ticket and invoice generation using @react-pdf/renderer.) Tj
+0 -18 Td
+/F2 11 Tf
+(Frontend Software Engineer | Enterprise Solutions & Softwares | 2021 - 2023) Tj
+/F1 10 Tf
+0 -13 Td
+(- Engineered role-based administration dashboards and regulatory trade license verification modules.) Tj
+0 -13 Td
+(- Connected frontend views with Node.js/Express REST APIs and handled JWT token refresh flows.) Tj
+0 -25 Td
+/F2 13 Tf
+(EDUCATION) Tj
+/F1 10 Tf
+0 -15 Td
+(B.Sc. in Computer Science & Engineering | Daffodil International University | 2017 - 2021) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000244 00000 n 
+0000001648 00000 n 
+0000001719 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1795
+%%EOF

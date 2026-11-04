@@ -1,0 +1,13 @@
+"use client";
+
+import React from "react";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import { AppThemeProvider } from "./ThemeContext";
+
+export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
+  return (
+    <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+      <AppThemeProvider>{children}</AppThemeProvider>
+    </AppRouterCacheProvider>
+  );
+}

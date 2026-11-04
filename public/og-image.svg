@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#292764" />
+      <stop offset="100%" stop-color="#11111B" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect x="40" y="40" width="1120" height="550" rx="16" fill="none" stroke="#B89555" stroke-opacity="0.3" stroke-width="2" />
+  
+  <text x="100" y="180" fill="#B89555" font-family="sans-serif" font-weight="700" font-size="20" letter-spacing="4">AVAILABLE FOR SELECTED OPPORTUNITIES</text>
+  <text x="100" y="260" fill="#FFFFFF" font-family="serif" font-weight="700" font-size="56">Uzzal Hossain</text>
+  <text x="100" y="325" fill="#B89555" font-family="sans-serif" font-weight="600" font-size="30">Senior Frontend-Focused Full-Stack Developer</text>
+  <text x="100" y="390" fill="#A2A2B8" font-family="sans-serif" font-size="22">React.js · Next.js · TypeScript · Material UI · Node.js · NestJS</text>
+  
+  <line x1="100" y1="440" x2="300" y2="440" stroke="#B89555" stroke-width="3" />
+  <text x="100" y="500" fill="#FFFFFF" font-family="monospace" font-size="18">Enterprise Travel Systems · OCR Automation · Scalable Web Architecture</text>
+</svg>
