@@ -1,40 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Box,
   Container,
   Typography,
   Button,
-  IconButton,
-  Card,
-  CardContent,
+  type SxProps,
+  type Theme,
 } from "@mui/material";
-import {
-  ArrowUpRight,
-  ExternalLink,
-  ChevronLeft,
-  ChevronRight,
-  Plane,
-  CheckCircle2,
-  Layers,
-  Cpu,
-  ShieldCheck,
-  Mail,
-  MessageSquare,
-  Navigation,
-  FileCheck,
-  Building,
-  Radio,
-  Search,
-} from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, ExternalLink, CheckCircle2 } from "lucide-react";
 import SectionHeading from "../common/SectionHeading";
 import { projectsData } from "@/data/projects";
 import { useAppTheme } from "@/theme/ThemeContext";
-import SkiperCardSwipe from "../animation/SkiperCardSwipe";
-import SkiperTiltCard from "../animation/SkiperTiltCard";
-import SkiperMarquee from "../animation/SkiperMarquee";
+
+type Project = (typeof projectsData)[number];
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 const categories = [
   "All Projects",
@@ -45,843 +29,810 @@ const categories = [
   "Enterprise & Portals",
 ];
 
+/* Same matching rules as before, moved into one function. */
+function matches(project: Project, selected: string): boolean {
+  if (selected === "All Projects") return true;
+
+  if (selected === "Travel Technology") {
+    return (
+      project.category === "Travel Technology" ||
+      project.slug.includes("travel") ||
+      project.slug.includes("flight") ||
+      project.slug.includes("hotel")
+    );
+  }
+  if (selected === "Cloud & Messaging") {
+    return (
+      project.category === "Cloud Communications" ||
+      project.category === "CPaaS & Messaging" ||
+      project.slug.includes("goti")
+    );
+  }
+  if (selected === "IoT & Telematics") {
+    return project.category === "IoT & Telematics";
+  }
+  if (selected === "Compliance & Legal") {
+    return (
+      project.category === "Compliance & Legal" ||
+      project.slug.includes("visa") ||
+      project.slug.includes("audit")
+    );
+  }
+  if (selected === "Enterprise & Portals") {
+    return (
+      project.category === "Enterprise Portals" ||
+      project.category === "Document Automation" ||
+      project.category === "Telecommunications"
+    );
+  }
+  return true;
+}
+
+/* One accent per kind of product. */
+function accentFor(category: string, isDark: boolean): string {
+  const c = category.toLowerCase();
+  if (c.includes("travel")) return isDark ? "#22B8CF" : "#0E8FA3";
+  if (c.includes("cloud") || c.includes("cpaas") || c.includes("messag"))
+    return isDark ? "#34D399" : "#15803D";
+  if (c.includes("iot") || c.includes("telematics"))
+    return isDark ? "#A78BFA" : "#6D4FD6";
+  if (c.includes("compliance") || c.includes("legal"))
+    return isDark ? "#E5B94E" : "#9A7414";
+  return isDark ? "#F472B6" : "#BE2F7F";
+}
+
+/* ------------------------------------------------------------------ */
+/*  Glass surface                                                      */
+/* ------------------------------------------------------------------ */
+
+type GlassTokens = {
+  bg: string;
+  border: string;
+  hi: string;
+  shadow: string;
+  chip: string;
+  line: string;
+};
+
+function Glass({
+  g,
+  accent,
+  hover,
+  sx,
+  children,
+}: {
+  g: GlassTokens;
+  accent: string;
+  hover?: boolean;
+  sx?: SxProps<Theme>;
+  children: React.ReactNode;
+}) {
+  // Cursor-following light, written straight to CSS variables (no re-render).
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - r.top}px`);
+  };
+
+  return (
+    <Box
+      onMouseMove={onMove}
+      sx={[
+        {
+          position: "relative",
+          borderRadius: "22px",
+          backgroundColor: g.bg,
+          backdropFilter: "blur(20px) saturate(165%)",
+          WebkitBackdropFilter: "blur(20px) saturate(165%)",
+          border: `1px solid ${g.border}`,
+          boxShadow: `${g.hi}, ${g.shadow}`,
+          overflow: "hidden",
+          transition: "border-color .3s ease, transform .3s ease",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background: `radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), ${accent}2e, transparent 60%)`,
+            opacity: 0,
+            transition: "opacity .3s ease",
+            pointerEvents: "none",
+          },
+          "&:hover::before": { opacity: 1 },
+          ...(hover
+            ? { "&:hover": { borderColor: `${accent}88`, transform: "translateY(-4px)" } }
+            : {}),
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+    >
+      <Box
+        sx={{
+          position: "relative",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {children}
+      </Box>
+    </Box>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Section                                                            */
+/* ------------------------------------------------------------------ */
+
 export default function Projects() {
   const { mode } = useAppTheme();
   const isDark = mode === "dark";
+  const reduce = useReducedMotion();
 
-  // First project is the Flagship Spotlight (TripFindy)
-  const featuredTripFindy = projectsData.find(
+  const featured = projectsData.find(
     (p) => p.slug === "tripfindy-b2b-travel-platform"
-  )!;
-
-  // Carousel projects: 6 featured platforms
-  const carouselProjects = projectsData.filter(
-    (p) =>
-      p.slug === "aero-bangladesh-travel-platform" ||
-      p.slug === "gotimail-enterprise-email-workspace" ||
-      p.slug === "gotisms-bulk-sms-cpaas-platform" ||
-      p.slug === "safety-gps-tracker-iot-telematics" ||
-      p.slug === "auditnext-digital-compliance-platform" ||
-      p.slug === "impressive-group-enterprise-portal" ||
-      p.slug === "ticket-lagbe-b2b-travel-portal"
   );
 
-  const [selectedCategory, setSelectedCategory] = useState("All Projects");
+  const [selected, setSelected] = useState("All Projects");
 
-  // Interactive TripFindy Views (Topology vs. Multi-Brand Console)
-  const [tripFindyTab, setTripFindyTab] = useState<"topology" | "console">(
-    "topology"
+  const counts = useMemo(
+    () =>
+      Object.fromEntries(
+        categories.map((c) => [c, projectsData.filter((p) => matches(p, c)).length])
+      ) as Record<string, number>,
+    []
   );
-  const [selectedTenant, setSelectedTenant] = useState<
-    "Agency Alpha" | "Global Jet B2B" | "Direct Partner"
-  >("Agency Alpha");
 
-  const tenantConfig: Record<
-    string,
-    { color: string; margin: string; net: number; comm: number; total: number }
-  > = {
-    "Agency Alpha": {
-      color: "#B89555",
-      margin: "+6.5%",
-      net: 820,
-      comm: 53.3,
-      total: 873.3,
-    },
-    "Global Jet B2B": {
-      color: "#22B8CF",
-      margin: "+8.0%",
-      net: 820,
-      comm: 65.6,
-      total: 885.6,
-    },
-    "Direct Partner": {
-      color: "#4169F5",
-      margin: "+5.0%",
-      net: 820,
-      comm: 41.0,
-      total: 861.0,
+  // In "All Projects" the flagship already has its own spotlight above.
+  const list = useMemo(
+    () =>
+      projectsData.filter(
+        (p) =>
+          matches(p, selected) &&
+          !(selected === "All Projects" && p.slug === featured?.slug)
+      ),
+    [selected, featured]
+  );
+
+  const g: GlassTokens = isDark
+    ? {
+      bg: "rgba(16, 28, 53, 0.55)",
+      border: "rgba(255,255,255,0.13)",
+      hi: "inset 0 1px 0 rgba(255,255,255,0.09)",
+      shadow: "0 26px 60px -26px rgba(0,0,0,0.7)",
+      chip: "rgba(255,255,255,0.06)",
+      line: "rgba(255,255,255,0.12)",
+    }
+    : {
+      bg: "rgba(255, 255, 255, 0.6)",
+      border: "rgba(15,23,42,0.08)",
+      hi: "inset 0 1px 0 rgba(255,255,255,0.95)",
+      shadow: "0 24px 50px -28px rgba(30,41,90,0.3)",
+      chip: "rgba(15,23,42,0.05)",
+      line: "rgba(15,23,42,0.1)",
+    };
+
+  const cyan = isDark ? "#22B8CF" : "#0E8FA3";
+
+  const rise = {
+    hidden: { opacity: 0, y: reduce ? 0 : 26 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: reduce ? 0 : 0.75, ease },
     },
   };
-
-  // Filtered projects for the Grid
-  const filteredProjects = projectsData.filter((project) => {
-    if (selectedCategory === "All Projects") return true;
-    if (selectedCategory === "Travel Technology") {
-      return (
-        project.category === "Travel Technology" ||
-        project.slug.includes("travel") ||
-        project.slug.includes("flight") ||
-        project.slug.includes("hotel")
-      );
-    }
-    if (selectedCategory === "Cloud & Messaging") {
-      return (
-        project.category === "Cloud Communications" ||
-        project.category === "CPaaS & Messaging" ||
-        project.slug.includes("goti")
-      );
-    }
-    if (selectedCategory === "IoT & Telematics") {
-      return project.category === "IoT & Telematics";
-    }
-    if (selectedCategory === "Compliance & Legal") {
-      return (
-        project.category === "Compliance & Legal" ||
-        project.slug.includes("visa") ||
-        project.slug.includes("audit")
-      );
-    }
-    if (selectedCategory === "Enterprise & Portals") {
-      return (
-        project.category === "Enterprise Portals" ||
-        project.category === "Document Automation" ||
-        project.category === "Telecommunications"
-      );
-    }
-    return true;
-  });
 
   return (
     <Box
       id="projects"
       component="section"
       sx={{
-        py: { xs: 9, md: 13 },
         position: "relative",
+        py: { xs: 9, md: 13 },
+        overflow: "hidden",
       }}
     >
-      <Container maxWidth="lg">
+      {/* Soft color fields behind the glass so the blur has something to refract */}
+      <Box
+        aria-hidden
+        sx={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          zIndex: 0,
+          background: isDark
+            ? "radial-gradient(520px circle at 8% 12%, rgba(34,184,207,0.16), transparent 70%), radial-gradient(560px circle at 92% 38%, rgba(167,139,250,0.14), transparent 70%), radial-gradient(520px circle at 30% 92%, rgba(229,185,78,0.1), transparent 70%)"
+            : "radial-gradient(520px circle at 8% 12%, rgba(34,184,207,0.2), transparent 70%), radial-gradient(560px circle at 92% 38%, rgba(167,139,250,0.18), transparent 70%), radial-gradient(520px circle at 30% 92%, rgba(229,185,78,0.16), transparent 70%)",
+        }}
+      />
+
+      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
         <SectionHeading
-          badge="PRODUCTION ECOSYSTEM"
-          title="Engineered Products & Enterprise Platforms"
-          subtitle="Real-world high-throughput platforms spanning B2B travel distribution, cloud communications, IoT fleet telematics, regulatory compliance, and corporate systems."
+          badge="Projects"
+          title="Products and platforms in production"
+          subtitle="B2B travel distribution, cloud messaging, fleet telematics, compliance and corporate systems."
         />
 
-        {/* ---------------- 1. FLAGSHIP SPOTLIGHT: TripFindy ---------------- */}
-        <Box sx={{ mb: { xs: 8, md: 12 } }}>
+        {/* ------------------------ Flagship spotlight ------------------------ */}
+        {featured && (
           <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1.5,
-              mb: 2.5,
-            }}
+            component={motion.div}
+            variants={rise}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            sx={{ mb: { xs: 8, md: 11 } }}
           >
-            <Box
-              sx={{
-                px: 1.4,
-                py: 0.35,
-                borderRadius: 1,
-                backgroundColor: "secondary.main",
-                color: "#FFFFFF",
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.74rem",
-                fontWeight: 700,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-              }}
-            >
-              FLAGSHIP SPOTLIGHT &bull; 01
-            </Box>
-            <Typography
-              variant="caption"
-              sx={{
-                color: "text.secondary",
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.74rem",
-              }}
-            >
-              Enterprise B2B Travel Distribution Platform
-            </Typography>
-          </Box>
-
-          <Card
-            sx={{
-              borderRadius: 4,
-              p: { xs: 3, sm: 4.5 },
-              backgroundColor: isDark ? "#101C35" : "#FFFFFF",
-              border: "1px solid",
-              borderColor: isDark ? "rgba(255, 255, 255, 0.12)" : "#E5E2D6",
-              boxShadow: isDark
-                ? "0 25px 60px -15px rgba(0, 0, 0, 0.6)"
-                : "0 20px 45px -10px rgba(41, 39, 100, 0.08)",
-            }}
-          >
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: { xs: "1fr", lg: "1.05fr 0.95fr" },
-                gap: { xs: 4, lg: 6 },
-                alignItems: "center",
-              }}
-            >
-              {/* Left Column: Details */}
-              <Box>
-                <Typography
-                  variant="h3"
-                  sx={{
-                    fontSize: { xs: "1.8rem", sm: "2.3rem" },
-                    color: "text.primary",
-                    fontWeight: 600,
-                    mb: 1,
-                  }}
-                >
-                  {featuredTripFindy.title}
-                </Typography>
-
-                <Typography
-                  variant="subtitle1"
-                  sx={{
-                    color: "secondary.main",
-                    fontWeight: 600,
-                    fontSize: "1rem",
-                    mb: 2.5,
-                  }}
-                >
-                  {featuredTripFindy.subtitle}
-                </Typography>
-
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "text.secondary",
-                    fontSize: { xs: "0.95rem", md: "1.02rem" },
-                    lineHeight: 1.7,
-                    mb: 3,
-                  }}
-                >
-                  {featuredTripFindy.overview}
-                </Typography>
-
-                {/* Key Architectural Bullets */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 1.2,
-                    mb: 3.5,
-                  }}
-                >
-                  {[
-                    "Multi-tenant white-label architecture deploying multiple travel brands from a unified core.",
-                    "Optimized Redux store handling 800+ multi-leg itineraries with instant memoized filters.",
-                    "Segment-level passenger and dynamic baggage allowance calculations.",
-                    "Client-side vector airline e-ticket generation eliminating server render latency.",
-                  ].map((pt, i) => (
-                    <Box
-                      key={i}
-                      sx={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 1.25,
-                      }}
-                    >
-                      <CheckCircle2
-                        size={15}
-                        color="#B89555"
-                        style={{ marginTop: "3px", flexShrink: 0 }}
-                      />
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: "text.primary",
-                          fontSize: "0.88rem",
-                          lineHeight: 1.5,
-                        }}
-                      >
-                        {pt}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-
-                {/* Tech pills */}
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 4 }}>
-                  {featuredTripFindy.technologies.map((t) => (
-                    <Box
-                      key={t}
-                      sx={{
-                        px: 1.3,
-                        py: 0.45,
-                        borderRadius: "6px",
-                        backgroundColor: isDark
-                          ? "rgba(255, 255, 255, 0.04)"
-                          : "rgba(0, 0, 0, 0.03)",
-                        border: "1px solid",
-                        borderColor: "divider",
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.74rem",
-                        color: "text.primary",
-                        fontWeight: 500,
-                      }}
-                    >
-                      {t}
-                    </Box>
-                  ))}
-                </Box>
-
-                {/* Actions */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                    gap: 2,
-                  }}
-                >
-                  <Button
-                    component={Link}
-                    href={`/projects/${featuredTripFindy.slug}`}
-                    variant="contained"
-                    endIcon={<ArrowUpRight size={16} />}
-                  >
-                    View Case Study
-                  </Button>
-
-                  {featuredTripFindy.liveDemoUrl && (
-                    <Button
-                      component="a"
-                      href={featuredTripFindy.liveDemoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      variant="outlined"
-                      endIcon={<ExternalLink size={16} />}
-                    >
-                      Visit Platform
-                    </Button>
-                  )}
-                </Box>
-              </Box>
-
-              {/* Right Column: Live Screenshot Browser Window */}
+            <Glass g={g} accent={cyan} sx={{ borderRadius: "28px" }}>
               <Box
                 sx={{
-                  borderRadius: 3,
-                  overflow: "hidden",
-                  border: "1px solid",
-                  borderColor: isDark ? "rgba(255, 255, 255, 0.12)" : "#E2DFD4",
-                  backgroundColor: isDark ? "#0A1224" : "#F7F6F2",
-                  boxShadow: isDark
-                    ? "0 20px 50px -10px rgba(0, 0, 0, 0.6)"
-                    : "0 15px 35px -8px rgba(0, 0, 0, 0.12)",
+                  display: "grid",
+                  gridTemplateColumns: { xs: "1fr", lg: "1.02fr 0.98fr" },
+                  gap: { xs: 4, lg: 6 },
+                  alignItems: "center",
+                  p: { xs: 2.5, sm: 4, lg: 5 },
                 }}
               >
-                {/* Header Chrome */}
-                <Box
-                  sx={{
-                    px: 2,
-                    py: 1.2,
-                    backgroundColor: isDark ? "#070D1B" : "#ECEAE2",
-                    borderBottom: "1px solid",
-                    borderColor: "divider",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
+                {/* Details */}
+                <Box sx={{ minWidth: 0 }}>
+                  <Box
+                    sx={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 1,
+                      px: 1.4,
+                      py: 0.45,
+                      mb: 2.2,
+                      borderRadius: "999px",
+                      backgroundColor: g.chip,
+                      border: `1px solid ${g.line}`,
+                    }}
+                  >
                     <Box
                       sx={{
-                        width: 9,
-                        height: 9,
+                        width: 8,
+                        height: 8,
                         borderRadius: "50%",
-                        backgroundColor: "#FF5F56",
+                        backgroundColor: "#22C55E",
                       }}
                     />
-                    <Box
-                      sx={{
-                        width: 9,
-                        height: 9,
-                        borderRadius: "50%",
-                        backgroundColor: "#FFBD2E",
-                      }}
-                    />
-                    <Box
-                      sx={{
-                        width: 9,
-                        height: 9,
-                        borderRadius: "50%",
-                        backgroundColor: "#27C93F",
-                      }}
-                    />
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        ml: 1,
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.7rem",
-                        color: "text.secondary",
-                      }}
-                    >
-                      tripfindy.com &bull; B2B &amp; B2C Travel Portal
+                    <Typography sx={{ fontSize: "0.76rem", fontWeight: 700 }}>
+                      Flagship project, live in production
                     </Typography>
                   </Box>
 
-                  <Box
-                    sx={{
-                      px: 1,
-                      py: 0.25,
-                      borderRadius: 1,
-                      backgroundColor: "rgba(34, 197, 94, 0.15)",
-                      color: "#22C55E",
-                      fontSize: "0.68rem",
-                      fontWeight: 700,
-                      fontFamily: "var(--font-mono)",
-                    }}
-                  >
-                    PRODUCTION LIVE
-                  </Box>
-                </Box>
-
-                {/* Screenshot Container */}
-                <Box
-                  sx={{
-                    position: "relative",
-                    width: "100%",
-                    lineHeight: 0,
-                    overflow: "hidden",
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={featuredTripFindy.previewImage}
-                    alt="TripFindy Platform Screenshot"
-                    sx={{
-                      width: "100%",
-                      height: "auto",
-                      maxHeight: "380px",
-                      objectFit: "cover",
-                      objectPosition: "top",
-                      display: "block",
-                      transition: "transform 0.3s ease",
-                      "&:hover": {
-                        transform: "scale(1.02)",
-                      },
-                    }}
-                  />
-                </Box>
-
-                {/* Telemetry Strip */}
-                <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(4, 1fr)",
-                    gap: 1,
-                    p: 1.5,
-                    borderTop: "1px solid",
-                    borderColor: "divider",
-                    backgroundColor: isDark ? "#0A1224" : "#F7F6F1",
-                  }}
-                >
-                  {[
-                    { label: "Filter Speed", val: "< 16ms", color: "#22B8CF" },
-                    { label: "Cache Hit Rate", val: "99.2%", color: "#22C55E" },
-                    {
-                      label: "Tenant Switch",
-                      val: "0ms (CSS)",
-                      color: "#B89555",
-                    },
-                    {
-                      label: "PDF Engine",
-                      val: "Vector Client",
-                      color: "#4169F5",
-                    },
-                  ].map((metric) => (
-                    <Box
-                      key={metric.label}
-                      sx={{
-                        p: 0.8,
-                        borderRadius: 1,
-                        backgroundColor: isDark ? "#101C35" : "#FFFFFF",
-                        border: "1px solid",
-                        borderColor: "divider",
-                        textAlign: "center",
-                      }}
-                    >
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: "text.secondary",
-                          fontSize: "0.62rem",
-                          fontFamily: "var(--font-mono)",
-                          display: "block",
-                        }}
-                      >
-                        {metric.label}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: metric.color,
-                          fontSize: "0.74rem",
-                          fontFamily: "var(--font-mono)",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {metric.val}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
-            </Box>
-          </Card>
-        </Box>
-
-        {/* ---------------- 2. SKIPER UI 3D CARD SWIPE CAROUSEL (SKIPER48) ---------------- */}
-        <Box sx={{ mb: { xs: 8, md: 12 } }}>
-          <Box sx={{ mb: 2.5 }}>
-            <Typography
-              variant="overline"
-              sx={{
-                color: "secondary.main",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.72rem",
-                display: "block",
-              }}
-            >
-              SKIPER UI &bull; 3D CARD SWIPE CAROUSEL (SKIPER48)
-            </Typography>
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: 700,
-                fontSize: { xs: "1.4rem", md: "1.8rem" },
-                color: "text.primary",
-              }}
-            >
-              Featured Production Ecosystem
-            </Typography>
-          </Box>
-
-          <SkiperCardSwipe projects={carouselProjects} />
-        </Box>
-
-        {/* ---------------- 2.1 SKIPER INFINITE MARQUEE TICKER ---------------- */}
-        <Box sx={{ mb: { xs: 8, md: 11 } }}>
-          <SkiperMarquee />
-        </Box>
-
-        {/* ---------------- 3. FILTERABLE PREMIUM PROJECT GRID ---------------- */}
-        <Box>
-          <Box sx={{ mb: 4 }}>
-            <Typography
-              variant="overline"
-              sx={{
-                color: "secondary.main",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.72rem",
-                display: "block",
-                mb: 1,
-              }}
-            >
-              COMPLETE PORTFOLIO CATALOG
-            </Typography>
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: 700,
-                fontSize: { xs: "1.4rem", md: "1.8rem" },
-                color: "text.primary",
-                mb: 3,
-              }}
-            >
-              Explore All Production Platforms &amp; Systems
-            </Typography>
-
-            {/* Category Filter Pills */}
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {categories.map((cat) => {
-                const isActive = selectedCategory === cat;
-                return (
-                  <Box
-                    key={cat}
-                    component="button"
-                    onClick={() => setSelectedCategory(cat)}
-                    sx={{
-                      px: 2,
-                      py: 0.7,
-                      borderRadius: "20px",
-                      border: "1px solid",
-                      borderColor: isActive
-                        ? isDark
-                          ? "#22B8CF"
-                          : "primary.main"
-                        : "divider",
-                      backgroundColor: isActive
-                        ? isDark
-                          ? "rgba(34, 184, 207, 0.12)"
-                          : "rgba(41, 39, 100, 0.08)"
-                        : "transparent",
-                      color: isActive
-                        ? isDark
-                          ? "#22B8CF"
-                          : "primary.main"
-                        : "text.secondary",
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.76rem",
-                      fontWeight: isActive ? 700 : 500,
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                      "&:hover": {
-                        borderColor: isDark ? "#22B8CF" : "primary.main",
-                        color: "text.primary",
-                      },
-                    }}
-                  >
-                    {cat}
-                  </Box>
-                );
-              })}
-            </Box>
-          </Box>
-
-          {/* Grid Cards Container */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                xs: "1fr",
-                sm: "repeat(2, 1fr)",
-                lg: "repeat(3, 1fr)",
-              },
-              gap: 3.5,
-            }}
-          >
-            {filteredProjects.map((project) => (
-              <SkiperTiltCard key={project.slug} maxTilt={5}>
-                <Card
-                  sx={{
-                    height: "100%",
-                    borderRadius: 3,
-                    backgroundColor: isDark ? "#101C35" : "#FFFFFF",
-                    border: "1px solid",
-                    borderColor: isDark ? "rgba(255, 255, 255, 0.1)" : "#E5E2D6",
-                    display: "flex",
-                    flexDirection: "column",
-                    overflow: "hidden",
-                    transition: "border-color 0.25s ease, box-shadow 0.25s ease",
-                    "&:hover": {
-                      boxShadow: isDark
-                        ? "0 20px 40px -10px rgba(0,0,0,0.5)"
-                        : "0 15px 35px -8px rgba(41,39,100,0.12)",
-                      borderColor: isDark ? "#22B8CF" : "secondary.main",
-                    },
-                  }}
-                >
-                {/* Card Top: Browser Mockup Screenshot */}
-                <Box
-                  sx={{
-                    position: "relative",
-                    width: "100%",
-                    height: "190px",
-                    backgroundColor: "#0A1224",
-                    overflow: "hidden",
-                    borderBottom: "1px solid",
-                    borderColor: "divider",
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={project.previewImage}
-                    alt={`${project.title} Preview`}
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      objectPosition: "top",
-                      display: "block",
-                      transition: "transform 0.35s ease",
-                      "&:hover": {
-                        transform: "scale(1.05)",
-                      },
-                    }}
-                  />
-
-                  {/* Top Status Pill */}
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 10,
-                      right: 10,
-                      px: 1,
-                      py: 0.3,
-                      borderRadius: 1,
-                      backgroundColor: "rgba(10, 18, 36, 0.85)",
-                      backdropFilter: "blur(6px)",
-                      border: "1px solid rgba(255,255,255,0.15)",
-                      color: "#22C55E",
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.65rem",
-                      fontWeight: 700,
-                    }}
-                  >
-                    {project.status.toUpperCase()}
-                  </Box>
-
-                  {/* Category Badge */}
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      bottom: 10,
-                      left: 10,
-                      px: 1,
-                      py: 0.3,
-                      borderRadius: 1,
-                      backgroundColor: "rgba(10, 18, 36, 0.85)",
-                      backdropFilter: "blur(6px)",
-                      border: "1px solid rgba(255,255,255,0.15)",
-                      color: "#FFFFFF",
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.65rem",
-                      fontWeight: 700,
-                      letterSpacing: "0.04em",
-                    }}
-                  >
-                    {project.category.toUpperCase()}
-                  </Box>
-                </Box>
-
-                {/* Card Content */}
-                <CardContent
-                  sx={{
-                    p: 2.8,
-                    display: "flex",
-                    flexDirection: "column",
-                    flexGrow: 1,
-                  }}
-                >
                   <Typography
-                    variant="h5"
+                    component="h3"
                     sx={{
-                      fontWeight: 700,
-                      fontSize: "1.18rem",
-                      color: "text.primary",
-                      mb: 0.5,
+                      fontSize: { xs: "1.9rem", sm: "2.4rem" },
+                      fontWeight: 800,
+                      lineHeight: 1.1,
+                      letterSpacing: "-0.03em",
+                      mb: 1,
                     }}
                   >
-                    {project.title}
+                    {featured.title}
                   </Typography>
 
                   <Typography
-                    variant="caption"
-                    sx={{
-                      color: "secondary.main",
-                      fontWeight: 600,
-                      fontSize: "0.78rem",
-                      mb: 1.5,
-                      lineHeight: 1.3,
-                      display: "-webkit-box",
-                      WebkitLineClamp: 1,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                    }}
+                    sx={{ color: cyan, fontWeight: 700, fontSize: "1rem", mb: 2.2 }}
                   >
-                    {project.subtitle}
+                    {featured.subtitle}
                   </Typography>
 
                   <Typography
-                    variant="body2"
                     sx={{
                       color: "text.secondary",
-                      fontSize: "0.86rem",
-                      lineHeight: 1.6,
-                      mb: 2.5,
-                      display: "-webkit-box",
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
+                      fontSize: { xs: "0.95rem", md: "1rem" },
+                      lineHeight: 1.7,
+                      mb: 2.6,
                     }}
                   >
-                    {project.overview}
+                    {featured.overview}
                   </Typography>
 
-                  {/* Technology Chips */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: 0.6,
-                      mb: 3,
-                      mt: "auto",
-                    }}
-                  >
-                    {project.technologies.slice(0, 4).map((tech) => (
-                      <Box
-                        key={tech}
-                        sx={{
-                          px: 1,
-                          py: 0.3,
-                          borderRadius: "4px",
-                          backgroundColor: isDark
-                            ? "rgba(255, 255, 255, 0.04)"
-                            : "rgba(0, 0, 0, 0.04)",
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "0.68rem",
-                          color: "text.secondary",
-                        }}
-                      >
-                        {tech}
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1.1, mb: 3 }}>
+                    {[
+                      "Multi-tenant white-label architecture deploying multiple travel brands from a unified core.",
+                      "Optimized Redux store handling 800+ multi-leg itineraries with instant memoized filters.",
+                      "Segment-level passenger and dynamic baggage allowance calculations.",
+                      "Client-side vector airline e-ticket generation, with no server render latency.",
+                    ].map((pt) => (
+                      <Box key={pt} sx={{ display: "flex", gap: 1.2, alignItems: "flex-start" }}>
+                        <CheckCircle2
+                          size={16}
+                          color={cyan}
+                          style={{ marginTop: 3, flexShrink: 0 }}
+                        />
+                        <Typography sx={{ fontSize: "0.88rem", lineHeight: 1.55 }}>
+                          {pt}
+                        </Typography>
                       </Box>
                     ))}
                   </Box>
 
-                  {/* Action Buttons */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      pt: 2,
-                      borderTop: "1px solid",
-                      borderColor: "divider",
-                    }}
-                  >
-                    <Button
-                      component={Link}
-                      href={`/projects/${project.slug}`}
-                      size="small"
-                      endIcon={<ArrowUpRight size={14} />}
-                      sx={{
-                        fontSize: "0.78rem",
-                        fontWeight: 600,
-                        px: 1.5,
-                        py: 0.4,
-                      }}
-                    >
-                      Case Study
-                    </Button>
-
-                    {project.liveDemoUrl && (
-                      <Button
-                        component="a"
-                        href={project.liveDemoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        size="small"
-                        color="inherit"
-                        endIcon={<ExternalLink size={14} />}
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.8, mb: 3.4 }}>
+                    {featured.technologies.map((t) => (
+                      <Box
+                        key={t}
                         sx={{
-                          fontSize: "0.76rem",
-                          color: "text.secondary",
                           px: 1.2,
                           py: 0.4,
+                          borderRadius: "8px",
+                          fontSize: "0.76rem",
+                          fontWeight: 600,
+                          backgroundColor: g.chip,
+                          border: `1px solid ${g.line}`,
                         }}
                       >
-                        Live Site
+                        {t}
+                      </Box>
+                    ))}
+                  </Box>
+
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.6 }}>
+                    <Button
+                      component={Link}
+                      href={`/projects/${featured.slug}`}
+                      variant="contained"
+                      endIcon={<ArrowUpRight size={16} />}
+                      sx={{ px: 2.8, fontWeight: 700 }}
+                    >
+                      View case study
+                    </Button>
+                    {featured.liveDemoUrl && (
+                      <Button
+                        component="a"
+                        href={featured.liveDemoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="outlined"
+                        endIcon={<ExternalLink size={16} />}
+                        sx={{ px: 2.6, fontWeight: 700 }}
+                      >
+                        Visit platform
                       </Button>
                     )}
                   </Box>
-                </CardContent>
-              </Card>
-            </SkiperTiltCard>
-          ))}
+                </Box>
+
+                {/* Browser window with floating glass metrics */}
+                <Box
+                  sx={{
+                    minWidth: 0,
+                    borderRadius: "16px",
+                    overflow: "hidden",
+                    border: `1px solid ${g.line}`,
+                    backgroundColor: isDark ? "rgba(7,13,27,0.7)" : "rgba(255,255,255,0.7)",
+                    boxShadow: isDark
+                      ? "0 24px 50px -16px rgba(0,0,0,0.65)"
+                      : "0 20px 40px -16px rgba(30,41,90,0.28)",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      px: 1.8,
+                      py: 1.1,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 0.8,
+                      borderBottom: `1px solid ${g.line}`,
+                    }}
+                  >
+                    {["#FF5F56", "#FFBD2E", "#27C93F"].map((c) => (
+                      <Box key={c} sx={{ width: 9, height: 9, borderRadius: "50%", backgroundColor: c }} />
+                    ))}
+                    <Typography
+                      sx={{
+                        ml: 1,
+                        px: 1.4,
+                        py: 0.2,
+                        borderRadius: "999px",
+                        fontSize: "0.72rem",
+                        color: "text.secondary",
+                        backgroundColor: g.chip,
+                      }}
+                    >
+                      tripfindy.com
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ position: "relative", lineHeight: 0 }}>
+                    <Box
+                      component="img"
+                      src={featured.previewImage}
+                      alt={`${featured.title} screenshot`}
+                      loading="lazy"
+                      sx={{
+                        width: "100%",
+                        height: "auto",
+                        maxHeight: 400,
+                        minHeight: 240,
+                        objectFit: "cover",
+                        objectPosition: "top",
+                        display: "block",
+                      }}
+                    />
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        left: 12,
+                        right: 12,
+                        bottom: 12,
+                        display: "grid",
+                        gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(4, 1fr)" },
+                        gap: 0.8,
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {[
+                        { l: "Filter speed", v: "<16ms" },
+                        { l: "Cache hit rate", v: "99.2%" },
+                        { l: "Tenant switch", v: "0ms, CSS only" },
+                        { l: "PDF engine", v: "Vector, client" },
+                      ].map((m) => (
+                        <Box
+                          key={m.l}
+                          sx={{
+                            px: 1.1,
+                            py: 0.9,
+                            borderRadius: "12px",
+                            color: "#FFFFFF",
+                            backgroundColor: "rgba(10,18,36,0.55)",
+                            backdropFilter: "blur(14px) saturate(160%)",
+                            WebkitBackdropFilter: "blur(14px) saturate(160%)",
+                            border: "1px solid rgba(255,255,255,0.18)",
+                          }}
+                        >
+                          <Typography sx={{ fontSize: "0.66rem", opacity: 0.75 }}>
+                            {m.l}
+                          </Typography>
+                          <Typography sx={{ fontSize: "0.82rem", fontWeight: 800 }}>
+                            {m.v}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+            </Glass>
+          </Box>
+        )}
+
+        {/* ------------------------ Catalog header + filter ------------------------ */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: { md: "flex-end" },
+            justifyContent: "space-between",
+            gap: 2.5,
+            mb: 3.5,
+          }}
+        >
+          <Box>
+            <Typography
+              component="h3"
+              sx={{
+                fontSize: { xs: "1.5rem", md: "1.9rem" },
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              All projects
+            </Typography>
+            <Typography
+              aria-live="polite"
+              sx={{ color: "text.secondary", fontSize: "0.88rem", mt: 0.4 }}
+            >
+              Showing {list.length} {list.length === 1 ? "project" : "projects"}
+            </Typography>
+          </Box>
+
+          <Box
+            role="tablist"
+            aria-label="Filter projects by category"
+            sx={{
+              display: "flex",
+              maxWidth: "100%",
+              overflowX: "auto",
+              p: 0.6,
+              gap: 0.3,
+              borderRadius: "999px",
+              backgroundColor: g.bg,
+              backdropFilter: "blur(20px) saturate(165%)",
+              WebkitBackdropFilter: "blur(20px) saturate(165%)",
+              border: `1px solid ${g.border}`,
+              boxShadow: g.hi,
+              scrollbarWidth: "none",
+              "&::-webkit-scrollbar": { display: "none" },
+            }}
+          >
+            {categories.map((c) => {
+              const active = selected === c;
+              return (
+                <Box
+                  key={c}
+                  component="button"
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setSelected(c)}
+                  sx={{
+                    all: "unset",
+                    position: "relative",
+                    flexShrink: 0,
+                    cursor: "pointer",
+                    px: 1.8,
+                    py: 0.85,
+                    borderRadius: "999px",
+                    whiteSpace: "nowrap",
+                    fontSize: "0.82rem",
+                    fontWeight: active ? 700 : 500,
+                    color: active ? "text.primary" : "text.secondary",
+                    transition: "color .2s ease",
+                    "&:hover": { color: "text.primary" },
+                    "&:focus-visible": { outline: `2px solid ${cyan}`, outlineOffset: 1 },
+                  }}
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="projectFilterPill"
+                      transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        borderRadius: 999,
+                        background: isDark
+                          ? "rgba(34,184,207,0.18)"
+                          : "rgba(14,143,163,0.13)",
+                        border: `1px solid ${cyan}66`,
+                      }}
+                    />
+                  )}
+                  <Box component="span" sx={{ position: "relative", zIndex: 1 }}>
+                    {c}
+                    <Box
+                      component="span"
+                      sx={{ ml: 0.7, fontSize: "0.72rem", opacity: 0.6, fontWeight: 600 }}
+                    >
+                      {counts[c]}
+                    </Box>
+                  </Box>
+                </Box>
+              );
+            })}
           </Box>
         </Box>
+
+        {/* ------------------------ Grid ------------------------ */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, 1fr)",
+              lg: "repeat(3, 1fr)",
+            },
+            gap: 3,
+          }}
+        >
+          <AnimatePresence mode="popLayout">
+            {list.map((project, i) => {
+              const accent = accentFor(project.category, isDark);
+              return (
+                <motion.div
+                  key={project.slug}
+                  layout={!reduce}
+                  initial={{ opacity: 0, y: reduce ? 0 : 22, scale: reduce ? 1 : 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, scale: reduce ? 1 : 0.97 }}
+                  transition={{
+                    duration: reduce ? 0 : 0.5,
+                    delay: reduce ? 0 : Math.min(i, 6) * 0.05,
+                    ease,
+                  }}
+                  style={{ minWidth: 0 }}
+                >
+                  <Glass g={g} accent={accent} hover sx={{ height: "100%" }}>
+                    {/* Screenshot */}
+                    <Box
+                      sx={{
+                        position: "relative",
+                        height: 200,
+                        overflow: "hidden",
+                        backgroundColor: "#0A1224",
+                        "&:hover img": { transform: "scale(1.05)" },
+                      }}
+                    >
+                      <Box
+                        component="img"
+                        src={project.previewImage}
+                        alt={`${project.title} preview`}
+                        loading="lazy"
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          objectPosition: "top",
+                          display: "block",
+                          transition: "transform .5s ease",
+                        }}
+                      />
+                      <Box
+                        aria-hidden
+                        sx={{
+                          position: "absolute",
+                          inset: 0,
+                          background:
+                            "linear-gradient(to top, rgba(8,14,30,0.75), transparent 55%)",
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: 12,
+                          left: 12,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 0.7,
+                          px: 1.1,
+                          py: 0.35,
+                          borderRadius: "999px",
+                          color: "#FFFFFF",
+                          fontSize: "0.7rem",
+                          fontWeight: 700,
+                          backgroundColor: "rgba(10,18,36,0.55)",
+                          backdropFilter: "blur(12px)",
+                          WebkitBackdropFilter: "blur(12px)",
+                          border: "1px solid rgba(255,255,255,0.18)",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: "50%",
+                            backgroundColor: "#22C55E",
+                          }}
+                        />
+                        {project.status}
+                      </Box>
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          left: 12,
+                          bottom: 12,
+                          px: 1.1,
+                          py: 0.35,
+                          borderRadius: "999px",
+                          color: "#FFFFFF",
+                          fontSize: "0.7rem",
+                          fontWeight: 700,
+                          backgroundColor: `${accent}cc`,
+                        }}
+                      >
+                        {project.category}
+                      </Box>
+                    </Box>
+
+                    {/* Content */}
+                    <Box
+                      sx={{
+                        p: 2.6,
+                        display: "flex",
+                        flexDirection: "column",
+                        flexGrow: 1,
+                      }}
+                    >
+                      <Typography
+                        component="h4"
+                        sx={{
+                          fontWeight: 800,
+                          fontSize: "1.15rem",
+                          letterSpacing: "-0.01em",
+                          mb: 0.5,
+                        }}
+                      >
+                        {project.title}
+                      </Typography>
+
+                      <Typography
+                        sx={{
+                          color: accent,
+                          fontWeight: 600,
+                          fontSize: "0.8rem",
+                          mb: 1.4,
+                          display: "-webkit-box",
+                          WebkitLineClamp: 1,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {project.subtitle}
+                      </Typography>
+
+                      <Typography
+                        sx={{
+                          color: "text.secondary",
+                          fontSize: "0.86rem",
+                          lineHeight: 1.6,
+                          mb: 2.2,
+                          display: "-webkit-box",
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {project.overview}
+                      </Typography>
+
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.6, mt: "auto", mb: 2.4 }}>
+                        {project.technologies.slice(0, 4).map((t) => (
+                          <Box
+                            key={t}
+                            sx={{
+                              px: 1,
+                              py: 0.3,
+                              borderRadius: "6px",
+                              fontSize: "0.7rem",
+                              fontWeight: 600,
+                              color: "text.secondary",
+                              backgroundColor: g.chip,
+                            }}
+                          >
+                            {t}
+                          </Box>
+                        ))}
+                      </Box>
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          pt: 1.6,
+                          borderTop: `1px solid ${g.line}`,
+                        }}
+                      >
+                        <Button
+                          component={Link}
+                          href={`/projects/${project.slug}`}
+                          size="small"
+                          endIcon={<ArrowUpRight size={14} />}
+                          sx={{ fontSize: "0.8rem", fontWeight: 700, px: 1.2 }}
+                        >
+                          Case study
+                        </Button>
+                        {project.liveDemoUrl && (
+                          <Button
+                            component="a"
+                            href={project.liveDemoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            size="small"
+                            color="inherit"
+                            endIcon={<ExternalLink size={14} />}
+                            sx={{ fontSize: "0.78rem", color: "text.secondary", px: 1.2 }}
+                          >
+                            Live site
+                          </Button>
+                        )}
+                      </Box>
+                    </Box>
+                  </Glass>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </Box>
+
+        {list.length === 0 && (
+          <Typography sx={{ textAlign: "center", color: "text.secondary", py: 6 }}>
+            No projects in this category yet.
+          </Typography>
+        )}
       </Container>
     </Box>
   );
