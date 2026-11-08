@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Box,
   Container,
@@ -9,72 +9,428 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, useReducedMotion, type PanInfo } from "framer-motion";
 import {
   ArrowRight,
+  ArrowUpRight,
   FileText,
   Github,
   Linkedin,
   Mail,
-  Cpu,
-  Zap,
   ChevronLeft,
   ChevronRight,
-  Sparkles,
+  Plane,
   Layers,
-  Radio,
-  CheckCircle2,
-  Clock,
-  Rocket,
-  ShieldCheck,
-  Code2,
+  MessageSquareText,
+  Satellite,
+  Blocks,
+  type LucideIcon,
 } from "lucide-react";
 import { personalData } from "@/data/personal";
 import { useAppTheme } from "@/theme/ThemeContext";
 import ResumeModal from "../common/ResumeModal";
-import ModernAvatar from "../animation/ModernAvatar";
 import { SkiperCopyButton } from "../animation/SkiperIcons";
 
-const keyMetrics = [
-  { value: "100k+", label: "CPaaS Msg / Hr", sub: "Sub-3s Carrier OTP" },
-  { value: "99.98%", label: "Resilience", sub: "Multi-Tenant Theming" },
-  { value: "5+ Years", label: "Commercial", sub: "15+ Production Apps" },
+/* ------------------------------------------------------------------ */
+/*  Content (from the CV). Edit this array to change the tickets.      */
+/* ------------------------------------------------------------------ */
+
+type WorkLink = { label: string; href: string };
+
+type Work = {
+  id: string;
+  tab: string;
+  icon: LucideIcon;
+  accent: string;
+  accentLight: string;
+  kind: string;
+  title: string;
+  summary: string;
+  metric: { value: string; label: string };
+  stack: string[];
+  links: WorkLink[];
+};
+
+const works: Work[] = [
+  {
+    id: "gds",
+    tab: "Travel GDS",
+    icon: Plane,
+    accent: "#22B8CF",
+    accentLight: "#0E8FA3",
+    kind: "B2B and B2C",
+    title: "Flight booking on GDS and NDC",
+    summary:
+      "Search, fares, ticketing and agent dashboards behind Tripfindy, Ticketlagbe and FlyFar.",
+    metric: { value: "<16ms", label: "to filter 800+ itineraries" },
+    stack: ["Next.js", "Redux Toolkit", "TypeScript"],
+    links: [
+      { label: "Tripfindy", href: "https://tripfindy.com" },
+      { label: "Ticketlagbe", href: "https://ticketlagbe.com" },
+      { label: "B2B Tripfindy", href: "https://b2btripfindy.com" },
+    ],
+  },
+  {
+    id: "white-label",
+    tab: "White label",
+    icon: Layers,
+    accent: "#E5B94E",
+    accentLight: "#9A7414",
+    kind: "Multi-tenant",
+    title: "One booking engine, every agency's brand",
+    summary:
+      "FlightBlu and B2B FlightBlu switch colors, logos and layout at runtime with injected CSS variables.",
+    metric: { value: "1 build", label: "serves every tenant" },
+    stack: ["Next.js", "MUI", "CSS variables"],
+    links: [{ label: "B2B FlightBlu", href: "https://b2b.flightblu.com" }],
+  },
+  {
+    id: "messaging",
+    tab: "SMS and mail",
+    icon: MessageSquareText,
+    accent: "#34D399",
+    accentLight: "#15803D",
+    kind: "Full-stack",
+    title: "Bulk SMS and email, front to back",
+    summary:
+      "GotiSMS and GotiMail: campaign builders, delivery reports and balances, with the API and database by the same developer.",
+    metric: { value: "100k+", label: "messages per hour" },
+    stack: ["React", "NestJS", "PostgreSQL"],
+    links: [
+      { label: "GotiSMS", href: "https://gotisms.com" },
+      { label: "GotiMail", href: "https://gotimail.com" },
+    ],
+  },
+  {
+    id: "gps",
+    tab: "Live tracking",
+    icon: Satellite,
+    accent: "#A78BFA",
+    accentLight: "#6D4FD6",
+    kind: "Real-time",
+    title: "Vehicle tracking that moves as you watch",
+    summary:
+      "Safety GPS Tracker streams positions over WebSockets to a live map with trip history and alerts.",
+    metric: { value: "<5s", label: "satellite fix to screen" },
+    stack: ["React", "WebSockets", "Node.js"],
+    links: [
+      { label: "Safety GPS Tracker", href: "https://safetygpstracker.com.bd" },
+    ],
+  },
+  {
+    id: "more",
+    tab: "More builds",
+    icon: Blocks,
+    accent: "#F472B6",
+    accentLight: "#BE2F7F",
+    kind: "Full-stack",
+    title: "Business sites and internal tools",
+    summary:
+      "Aero, AuditNext and Impressive BD, each designed, built and deployed end to end.",
+    metric: { value: "15+", label: "production apps shipped" },
+    stack: ["Next.js", "Node.js", "MongoDB"],
+    links: [
+      { label: "Aero", href: "https://aero.com.bd" },
+      { label: "AuditNext", href: "https://auditnext.com.bd" },
+      { label: "Impressive BD", href: "https://impressivebd.com" },
+    ],
+  },
 ];
 
-const coreTechPills = [
-  "React 19",
-  "Next.js 15 (App Router)",
-  "TypeScript Strict",
-  "Redux Toolkit (<16ms Cache)",
-  "WebSockets",
-  "Node.js / NestJS",
+const headlineLines = [
+  "Interfaces for",
+  "flights, messages",
+  "and moving",
+  "vehicles.",
 ];
 
-// Apple Cinematic Stagger Easing
-const appleEase = [0.16, 1, 0.3, 1];
+const facts = [
+  { value: "5+", label: "years of React and Next.js" },
+  { value: "15+", label: "apps in production" },
+  { value: "Full-stack", label: "Node, NestJS, PostgreSQL" },
+];
+
+const AUTOPLAY_MS = 6500;
+const STUB = 150; // width of the ticket stub on wider screens (px)
+const STUB_XS = 96; // height of the ticket stub on phones (px)
+const NOTCH = 10;
+const ease = [0.16, 1, 0.3, 1] as const;
+
+/* ------------------------------------------------------------------ */
+/*  Ticket                                                             */
+/* ------------------------------------------------------------------ */
+
+type Tokens = {
+  ticket: string;
+  edge: string;
+  ink: string;
+  sub: string;
+  chip: string;
+};
+
+function Ticket({
+  work,
+  accent,
+  tok,
+  interactive,
+}: {
+  work: Work;
+  accent: string;
+  tok: Tokens;
+  interactive: boolean;
+}) {
+  const Icon = work.icon;
+
+  const maskXs = `radial-gradient(circle ${NOTCH}px at 0 calc(100% - ${STUB_XS}px), #0000 98%, #000), radial-gradient(circle ${NOTCH}px at 100% calc(100% - ${STUB_XS}px), #0000 98%, #000)`;
+  const maskSm = `radial-gradient(circle ${NOTCH}px at calc(100% - ${STUB}px) 0, #0000 98%, #000), radial-gradient(circle ${NOTCH}px at calc(100% - ${STUB}px) 100%, #0000 98%, #000)`;
+
+  return (
+    <Box
+      sx={{
+        position: "relative",
+        height: { xs: 470, sm: 310 },
+        display: "flex",
+        flexDirection: { xs: "column", sm: "row" },
+        borderRadius: "18px",
+        backgroundColor: tok.ticket,
+        border: "1px solid",
+        borderColor: tok.edge,
+        color: tok.ink,
+        overflow: "hidden",
+        WebkitMaskImage: { xs: maskXs, sm: maskSm },
+        maskImage: { xs: maskXs, sm: maskSm },
+        WebkitMaskComposite: "source-in",
+        maskComposite: "intersect",
+      }}
+    >
+      {/* accent strip */}
+      <Box
+        aria-hidden
+        sx={{ position: "absolute", top: 0, left: 0, right: 0, height: 5, backgroundColor: accent }}
+      />
+
+      {/* Main section */}
+      <Box
+        sx={{
+          flex: 1,
+          minWidth: 0,
+          minHeight: 0,
+          px: { xs: 2.2, sm: 2.8 },
+          pt: 3,
+          pb: 2.2,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.2, mb: 1.6 }}>
+          <Box
+            sx={{
+              width: 34,
+              height: 34,
+              borderRadius: "10px",
+              display: "grid",
+              placeItems: "center",
+              color: accent,
+              backgroundColor: `${accent}22`,
+            }}
+          >
+            <Icon size={18} />
+          </Box>
+          <Typography sx={{ fontWeight: 700, fontSize: "0.86rem" }}>
+            {work.tab}
+          </Typography>
+          <Typography
+            sx={{
+              ml: "auto",
+              fontSize: "0.76rem",
+              fontWeight: 600,
+              color: tok.sub,
+            }}
+          >
+            {work.kind}
+          </Typography>
+        </Box>
+
+        <Typography
+          component="h2"
+          sx={{
+            fontSize: { xs: "1.3rem", sm: "1.4rem" },
+            fontWeight: 800,
+            lineHeight: 1.18,
+            letterSpacing: "-0.02em",
+            mb: 0.9,
+          }}
+        >
+          {work.title}
+        </Typography>
+
+        <Typography
+          sx={{
+            fontSize: "0.84rem",
+            lineHeight: 1.55,
+            color: tok.sub,
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            mb: 1.6,
+          }}
+        >
+          {work.summary}
+        </Typography>
+
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.7, mb: "auto" }}>
+          {work.stack.map((s) => (
+            <Box
+              key={s}
+              sx={{
+                px: 1,
+                py: 0.3,
+                borderRadius: "6px",
+                fontSize: "0.74rem",
+                fontWeight: 600,
+                backgroundColor: tok.chip,
+              }}
+            >
+              {s}
+            </Box>
+          ))}
+        </Box>
+
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.8, pt: 1.4 }}>
+          {work.links.map((l) => (
+            <Box
+              key={l.href}
+              component="a"
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              draggable={false}
+              tabIndex={interactive ? 0 : -1}
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 0.4,
+                px: 1.2,
+                py: 0.45,
+                borderRadius: "999px",
+                fontSize: "0.78rem",
+                fontWeight: 700,
+                color: accent,
+                textDecoration: "none",
+                border: "1px solid",
+                borderColor: `${accent}77`,
+                transition: "background-color .2s ease",
+                "&:hover": { backgroundColor: `${accent}22` },
+                "&:focus-visible": { outline: `2px solid ${accent}`, outlineOffset: 2 },
+              }}
+            >
+              {l.label}
+              <ArrowUpRight size={13} />
+            </Box>
+          ))}
+        </Box>
+      </Box>
+
+      {/* Stub */}
+      <Box
+        sx={{
+          flexShrink: 0,
+          width: { xs: "100%", sm: STUB },
+          height: { xs: STUB_XS, sm: "auto" },
+          borderTop: { xs: "2px dashed", sm: "none" },
+          borderLeft: { xs: "none", sm: "2px dashed" },
+          borderColor: tok.edge,
+          px: { xs: 2.2, sm: 2 },
+          py: { xs: 1.4, sm: 2.6 },
+          display: "flex",
+          flexDirection: { xs: "row", sm: "column" },
+          alignItems: { xs: "center", sm: "flex-start" },
+          justifyContent: "space-between",
+          gap: 1.5,
+        }}
+      >
+        <Box sx={{ pt: { sm: 1.5 } }}>
+          <Typography
+            sx={{
+              fontSize: { xs: "1.7rem", sm: "2.1rem" },
+              fontWeight: 800,
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              color: accent,
+            }}
+          >
+            {work.metric.value}
+          </Typography>
+          <Typography sx={{ fontSize: "0.74rem", color: tok.sub, mt: 0.6, maxWidth: "16ch", lineHeight: 1.35 }}>
+            {work.metric.label}
+          </Typography>
+        </Box>
+
+        {/* barcode */}
+        <Box
+          aria-hidden
+          sx={{
+            width: { xs: 96, sm: "100%" },
+            height: 26,
+            opacity: 0.55,
+            background: `repeating-linear-gradient(90deg, ${tok.ink} 0 2px, transparent 2px 4px, ${tok.ink} 4px 5px, transparent 5px 8px, ${tok.ink} 8px 11px, transparent 11px 13px)`,
+          }}
+        />
+      </Box>
+    </Box>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Hero                                                               */
+/* ------------------------------------------------------------------ */
 
 export default function Hero() {
   const { mode } = useAppTheme();
   const isDark = mode === "dark";
+  const reduce = useReducedMotion();
+
   const [resumeOpen, setResumeOpen] = useState(false);
-  const [activeSlide, setActiveSlide] = useState<0 | 1>(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
 
-  // Auto-advance dual slider every 7 seconds (pauses on hover)
-  useEffect(() => {
-    if (isPaused) return;
-    const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev === 0 ? 1 : 0));
-    }, 7000);
-    return () => clearInterval(interval);
-  }, [isPaused]);
+  const n = works.length;
+  const active = works[index];
+  const accent = isDark ? active.accent : active.accentLight;
 
-  const handleScrollTo = (elementId: string) => {
-    const el = document.getElementById(elementId);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+  const step = useCallback((d: number) => setIndex((c) => (c + d + n) % n), [n]);
+
+  const onDragEnd = (_: unknown, info: PanInfo) => {
+    if (info.offset.x < -60) step(1);
+    else if (info.offset.x > 60) step(-1);
   };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight") step(1);
+    if (e.key === "ArrowLeft") step(-1);
+  };
+
+  const scrollTo = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+
+  const tok: Tokens = isDark
+    ? {
+      ticket: "#121C38",
+      edge: "rgba(255,255,255,0.12)",
+      ink: "#E8EEFB",
+      sub: "rgba(232,238,251,0.66)",
+      chip: "rgba(255,255,255,0.07)",
+    }
+    : {
+      ticket: "#FFFFFF",
+      edge: "rgba(15,23,42,0.12)",
+      ink: "#0F172A",
+      sub: "rgba(15,23,42,0.64)",
+      chip: "rgba(15,23,42,0.06)",
+    };
+
+  const hairline = isDark ? "rgba(255,255,255,0.12)" : "rgba(15,23,42,0.12)";
 
   return (
     <>
@@ -85,1175 +441,396 @@ export default function Hero() {
           position: "relative",
           minHeight: "100vh",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          pt: { xs: 12, sm: 14, md: 16 },
-          pb: { xs: 8, md: 11 },
-          zIndex: 1,
+          alignItems: "center",
+          pt: { xs: 12, sm: 14, md: 15 },
+          pb: { xs: 8, md: 10 },
           overflow: "hidden",
+          zIndex: 1,
         }}
       >
-        {/* Apple-Style Ambient Radial Aurora Glow */}
-        <div
-          aria-hidden="true"
-          className="aurora"
-          style={{
+        {/* Flight path: the one ambient moment. A plane crosses once on load. */}
+        <Box
+          component="svg"
+          aria-hidden
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="xMidYMid slice"
+          sx={{
             position: "absolute",
             inset: 0,
-            opacity: isDark ? 0.95 : 0.45,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
             zIndex: 0,
           }}
-        />
-        <div
-          aria-hidden="true"
-          className="schematic-grid"
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: isDark ? 0.65 : 0.4,
-            zIndex: 0,
-          }}
-        />
+        >
+          <path
+            id="hero-arc"
+            d="M-60 800 C 280 680, 480 140, 880 190 S 1290 380, 1520 120"
+            fill="none"
+            stroke={isDark ? "#7DD3E8" : "#1B2A6B"}
+            strokeOpacity={isDark ? 0.35 : 0.22}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeDasharray="1 11"
+          />
+          {!reduce && (
+            <g fill={isDark ? "#E8EEFB" : "#1B2A6B"}>
+              <path d="M16 0 L-10 -9 L-5 0 L-10 9 Z" />
+              <animateMotion
+                dur="11s"
+                begin="1s"
+                repeatCount="1"
+                fill="freeze"
+                rotate="auto"
+              >
+                <mpath href="#hero-arc" />
+              </animateMotion>
+            </g>
+          )}
+        </Box>
 
         <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
-          {/* Main Hero 2-Column Grid: Left Content, Right Modern 3D Avatar */}
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", lg: "1.12fr 0.88fr" },
-              gap: { xs: 5, lg: 6 },
+              gridTemplateColumns: { xs: "1fr", lg: "1.02fr 0.98fr" },
+              gap: { xs: 6, lg: 7 },
               alignItems: "center",
             }}
           >
-            {/* Left Column: Comprehensive Written Content, Interactive Two Slider, Metrics & Actions */}
-            <Box>
-              {/* 01. Sleek Apple Dynamic Recruiter Beacon */}
-              <motion.div
-                initial={{ opacity: 0, y: 22, filter: "blur(8px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.7, ease: appleEase }}
+            {/* ------------------------- Left ------------------------- */}
+            <Box sx={{ minWidth: 0 }}>
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 1,
+                  px: 1.5,
+                  py: 0.5,
+                  mb: 3,
+                  borderRadius: "999px",
+                  border: "1px solid",
+                  borderColor: hairline,
+                  backgroundColor: isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.75)",
+                }}
               >
-                <Box
-                  sx={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 0.8,
-                    px: 1.4,
-                    py: 0.38,
-                    borderRadius: "20px",
-                    backgroundColor: isDark
-                      ? "rgba(34, 184, 207, 0.1)"
-                      : "rgba(41, 39, 100, 0.05)",
-                    border: "1px solid",
-                    borderColor: isDark
-                      ? "rgba(34, 184, 207, 0.28)"
-                      : "rgba(41, 39, 100, 0.12)",
-                    backdropFilter: "blur(14px)",
-                    mb: 1.8,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 7,
-                      height: 7,
-                      borderRadius: "50%",
-                      backgroundColor: "#22C55E",
-                      boxShadow: "0 0 8px #22C55E",
-                    }}
-                  />
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.72rem",
-                      fontWeight: 700,
-                      letterSpacing: "0.05em",
-                      color: isDark ? "#22B8CF" : "primary.main",
-                    }}
-                  >
-                    OPEN FOR SENIOR FRONTEND &amp; ARCHITECTURE ROLES
-                  </Typography>
-                </Box>
-              </motion.div>
-
-              {/* 02. High-Impact Master Headline with Apple Metallic Shimmer */}
-              {/* <motion.div
-                initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.8, delay: 0.1, ease: appleEase }}
-              >
-                <Typography
-                  variant="h1"
-                  component="h1"
-                  className="apple-shimmer-text"
-                  sx={{
-                    fontSize: {
-                      xs: "2.35rem",
-                      sm: "3.1rem",
-                      md: "3.65rem",
-                      lg: "4.05rem",
-                    },
-                    fontWeight: 900,
-                    lineHeight: { xs: 1.08, md: 1.05 },
-                    letterSpacing: "-0.04em",
-                    mb: 2.2,
-                  }}
-                >
-                  Architecting High-Throughput Web Platforms With Frontend Precision.
+                <Box sx={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: "#22C55E" }} />
+                <Typography sx={{ fontWeight: 600, fontSize: "0.78rem" }}>
+                  Open to senior frontend and architecture roles
                 </Typography>
-              </motion.div> */}
+              </Box>
 
-              {/* 03. Short, Punchy Description (AI-Augmented Velocity + Complex Problem Solving) */}
-              {/* <motion.div
-                initial={{ opacity: 0, y: 22, filter: "blur(8px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.8, delay: 0.18, ease: appleEase }}
+              <Typography
+                component="h1"
+                aria-label={headlineLines.join(" ")}
+                sx={{
+                  fontSize: { xs: "2.6rem", sm: "3.4rem", md: "3.8rem", lg: "3.5rem" },
+                  fontWeight: 800,
+                  lineHeight: 1.04,
+                  letterSpacing: "-0.04em",
+                  mb: 2.6,
+                }}
               >
-                <Typography
-                  variant="body1"
-                  sx={{
-                    fontSize: { xs: "0.98rem", md: "1.08rem" },
-                    lineHeight: 1.6,
-                    color: "text.secondary",
-                    maxWidth: "580px",
-                    mb: 2.8,
-                  }}
-                >
-                  I am <strong style={{ color: isDark ? "#FFFFFF" : "#0A1128" }}>Uzzal Hossain</strong>, a Senior Frontend Engineer with 5+ years of commercial experience engineering mission-critical airline platforms (<strong style={{ color: isDark ? "#22B8CF" : "#1B2A4E" }}>TripFindy</strong>, <strong style={{ color: isDark ? "#22B8CF" : "#1B2A4E" }}>Ticket Lagbe</strong>, <strong style={{ color: isDark ? "#22B8CF" : "#1B2A4E" }}>B2B.FlightBlu</strong>), telematics &amp; CPaaS engines.
-                </Typography>
-              </motion.div> */}
-
-
-              {/* 04. Beautiful Interactive Two Slider (AI 10x Velocity vs Complex Systems Solver) */}
-              <motion.div
-                initial={{ opacity: 0, y: 22, filter: "blur(8px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.8, delay: 0.25, ease: appleEase }}
-              >
-                <Box
-                  onMouseEnter={() => setIsPaused(true)}
-                  onMouseLeave={() => setIsPaused(false)}
-                  sx={{
-                    position: "relative",
-                    borderRadius: "20px",
-                    backgroundColor: isDark
-                      ? "rgba(14, 24, 45, 0.78)"
-                      : "rgba(255, 255, 255, 0.92)",
-                    border: "1px solid",
-                    borderColor: isDark
-                      ? activeSlide === 0
-                        ? "rgba(34, 184, 207, 0.35)"
-                        : "rgba(212, 186, 130, 0.35)"
-                      : activeSlide === 0
-                        ? "rgba(34, 184, 207, 0.25)"
-                        : "rgba(184, 149, 85, 0.25)",
-                    backdropFilter: "blur(24px) saturate(180%)",
-                    boxShadow: isDark
-                      ? activeSlide === 0
-                        ? "0 18px 45px -10px rgba(0, 0, 0, 0.65), 0 0 25px rgba(34, 184, 207, 0.15)"
-                        : "0 18px 45px -10px rgba(0, 0, 0, 0.65), 0 0 25px rgba(212, 186, 130, 0.15)"
-                      : "0 12px 35px -8px rgba(41, 39, 100, 0.12)",
-                    mb: 2.8,
-                    overflow: "hidden",
-                    transition: "border-color 0.4s ease, box-shadow 0.4s ease",
-                  }}
-                >
-                  {/* Top Specular Hairline Highlight */}
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: "1px",
-                      background:
-                        activeSlide === 0
-                          ? "linear-gradient(90deg, transparent, rgba(34, 184, 207, 0.6), transparent)"
-                          : "linear-gradient(90deg, transparent, rgba(212, 186, 130, 0.6), transparent)",
-                      transition: "background 0.4s ease",
-                    }}
-                  />
-
-                  {/* Two Slider Header: Segmented Pills & Carousel Controls */}
-                  <Box
-                    sx={{
-                      px: { xs: 1.4, sm: 2 },
-                      pt: 1.4,
-                      pb: 1.2,
-                      borderBottom: "1px solid",
-                      borderColor: "divider",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      flexWrap: "wrap",
-                      gap: 1,
-                      backgroundColor: isDark
-                        ? "rgba(6, 11, 23, 0.5)"
-                        : "rgba(240, 239, 234, 0.6)",
-                    }}
-                  >
-                    {/* Segmented Tab Controls */}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 0.6,
-                        p: 0.4,
-                        borderRadius: "10px",
-                        backgroundColor: isDark
-                          ? "rgba(10, 18, 36, 0.8)"
-                          : "rgba(255, 255, 255, 0.9)",
-                        border: "1px solid",
-                        borderColor: "divider",
-                      }}
+                {headlineLines.map((line, i) => (
+                  <Box key={line} aria-hidden sx={{ overflow: "hidden", pb: "0.1em" }}>
+                    <motion.span
+                      style={{ display: "block" }}
+                      initial={{ y: reduce ? 0 : "108%" }}
+                      animate={{ y: 0 }}
+                      transition={{ duration: reduce ? 0 : 0.9, delay: reduce ? 0 : 0.1 + i * 0.12, ease }}
                     >
-                      {/* Slide 0: AI 10x Velocity Tab */}
-                      <Box
-                        component="button"
-                        onClick={() => setActiveSlide(0)}
-                        sx={{
-                          position: "relative",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 0.7,
-                          px: 1.4,
-                          py: 0.55,
-                          borderRadius: "8px",
-                          border: "none",
-                          backgroundColor: "transparent",
-                          color: activeSlide === 0
-                            ? isDark
-                              ? "#FFFFFF"
-                              : "primary.main"
-                            : "text.secondary",
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "0.72rem",
-                          fontWeight: activeSlide === 0 ? 800 : 600,
-                          cursor: "pointer",
-                          outline: "none",
-                          zIndex: 1,
-                          transition: "color 0.2s ease",
-                        }}
-                      >
-                        {activeSlide === 0 && (
-                          <motion.div
-                            layoutId="superpowerActiveSlide"
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              borderRadius: 8,
-                              backgroundColor: isDark
-                                ? "rgba(34, 184, 207, 0.2)"
-                                : "rgba(41, 39, 100, 0.09)",
-                              border: isDark
-                                ? "1px solid rgba(34, 184, 207, 0.5)"
-                                : "1px solid rgba(41, 39, 100, 0.2)",
-                              boxShadow: isDark
-                                ? "0 2px 12px rgba(34, 184, 207, 0.25)"
-                                : "0 2px 6px rgba(0,0,0,0.05)",
-                              zIndex: -1,
-                            }}
-                            transition={{ type: "spring", stiffness: 450, damping: 32 }}
-                          />
-                        )}
-                        <Zap size={14} color="#22B8CF" />
-                        <span>AI-Powered 10x Velocity</span>
-                      </Box>
+                      {line}
+                    </motion.span>
+                  </Box>
+                ))}
+              </Typography>
 
-                      {/* Slide 1: Complex Systems Solver Tab */}
-                      <Box
-                        component="button"
-                        onClick={() => setActiveSlide(1)}
-                        sx={{
-                          position: "relative",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 0.7,
-                          px: 1.4,
-                          py: 0.55,
-                          borderRadius: "8px",
-                          border: "none",
-                          backgroundColor: "transparent",
-                          color: activeSlide === 1
-                            ? isDark
-                              ? "#FFFFFF"
-                              : "primary.main"
-                            : "text.secondary",
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "0.72rem",
-                          fontWeight: activeSlide === 1 ? 800 : 600,
-                          cursor: "pointer",
-                          outline: "none",
-                          zIndex: 1,
-                          transition: "color 0.2s ease",
-                        }}
-                      >
-                        {activeSlide === 1 && (
-                          <motion.div
-                            layoutId="superpowerActiveSlide"
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              borderRadius: 8,
-                              backgroundColor: isDark
-                                ? "rgba(212, 186, 130, 0.2)"
-                                : "rgba(184, 149, 85, 0.12)",
-                              border: isDark
-                                ? "1px solid rgba(212, 186, 130, 0.5)"
-                                : "1px solid rgba(184, 149, 85, 0.25)",
-                              boxShadow: isDark
-                                ? "0 2px 12px rgba(212, 186, 130, 0.25)"
-                                : "0 2px 6px rgba(0,0,0,0.05)",
-                              zIndex: -1,
-                            }}
-                            transition={{ type: "spring", stiffness: 450, damping: 32 }}
-                          />
-                        )}
-                        <Cpu size={14} color="#D4BA82" />
-                        <span>Complex Systems Solver</span>
-                      </Box>
-                    </Box>
+              <Typography
+                sx={{
+                  color: "text.secondary",
+                  fontSize: { xs: "1rem", md: "1.06rem" },
+                  lineHeight: 1.65,
+                  maxWidth: "52ch",
+                  mb: 3.5,
+                }}
+              >
+                I&apos;m Md. Uzzal Hossain, a Software Engineer at Tripfindy. I build
+                booking, messaging and tracking products in React and Next.js, and I
+                write the Node.js, NestJS and PostgreSQL behind them.
+              </Typography>
 
-                    {/* Slider Navigation Dots & Prev/Next Arrows */}
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      {/* Visual Indicator Dots */}
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
-                        <Box
-                          onClick={() => setActiveSlide(0)}
-                          sx={{
-                            width: activeSlide === 0 ? 20 : 6,
-                            height: 6,
-                            borderRadius: "4px",
-                            backgroundColor: activeSlide === 0 ? "#22B8CF" : "text.secondary",
-                            opacity: activeSlide === 0 ? 1 : 0.4,
-                            cursor: "pointer",
-                            transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                          }}
-                        />
-                        <Box
-                          onClick={() => setActiveSlide(1)}
-                          sx={{
-                            width: activeSlide === 1 ? 20 : 6,
-                            height: 6,
-                            borderRadius: "4px",
-                            backgroundColor: activeSlide === 1 ? "#D4BA82" : "text.secondary",
-                            opacity: activeSlide === 1 ? 1 : 0.4,
-                            cursor: "pointer",
-                            transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                          }}
-                        />
-                      </Box>
+              <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1.6, mb: 4 }}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={() => scrollTo("projects")}
+                  endIcon={<ArrowRight size={16} />}
+                  sx={{ px: 3.2, py: 1.25, fontSize: "0.92rem", fontWeight: 700 }}
+                >
+                  See all projects
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => setResumeOpen(true)}
+                  startIcon={<FileText size={16} />}
+                  sx={{
+                    px: 2.8,
+                    py: 1.25,
+                    fontSize: "0.92rem",
+                    fontWeight: 700,
+                    borderColor: isDark ? "rgba(255,255,255,0.22)" : "divider",
+                  }}
+                >
+                  Download CV
+                </Button>
+                <SkiperCopyButton
+                  textToCopy={personalData.email}
+                  label="Copy email"
+                  copiedLabel="Email copied"
+                />
+              </Box>
 
-                      {/* Previous Slide Button */}
+              <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: { xs: 3, sm: 0 } }}>
+                {facts.map((f, i) => (
+                  <Box
+                    key={f.label}
+                    sx={{
+                      pr: { sm: 3.5 },
+                      pl: { sm: i === 0 ? 0 : 3.5 },
+                      borderLeft: { sm: i === 0 ? "none" : "1px solid" },
+                      borderColor: hairline,
+                    }}
+                  >
+                    <Typography sx={{ fontWeight: 800, fontSize: "1.3rem", lineHeight: 1.1 }}>
+                      {f.value}
+                    </Typography>
+                    <Typography sx={{ color: "text.secondary", fontSize: "0.78rem", mt: 0.3 }}>
+                      {f.label}
+                    </Typography>
+                  </Box>
+                ))}
+
+                <Box sx={{ display: "flex", gap: 1, ml: { sm: "auto" } }}>
+                  {[
+                    { t: "GitHub", href: personalData.github, I: Github },
+                    { t: "LinkedIn", href: personalData.linkedin, I: Linkedin },
+                    { t: "Email", href: `mailto:${personalData.email}`, I: Mail },
+                  ].map(({ t, href, I }) => (
+                    <Tooltip key={t} title={t}>
                       <IconButton
+                        component="a"
+                        href={href}
+                        target={t === "Email" ? undefined : "_blank"}
+                        rel="noopener noreferrer"
+                        aria-label={t}
                         size="small"
-                        onClick={() => setActiveSlide((prev) => (prev === 0 ? 1 : 0))}
-                        aria-label="Previous superpower"
                         sx={{
-                          width: 26,
-                          height: 26,
                           color: "text.secondary",
                           border: "1px solid",
                           borderColor: "divider",
-                          "&:hover": { color: "text.primary", borderColor: "#22B8CF" },
+                          "&:hover": { color: "text.primary", borderColor: accent },
                         }}
                       >
-                        <ChevronLeft size={14} />
+                        <I size={15} />
                       </IconButton>
-
-                      {/* Next Slide Button */}
-                      <IconButton
-                        size="small"
-                        onClick={() => setActiveSlide((prev) => (prev === 0 ? 1 : 0))}
-                        aria-label="Next superpower"
-                        sx={{
-                          width: 26,
-                          height: 26,
-                          color: "text.secondary",
-                          border: "1px solid",
-                          borderColor: "divider",
-                          "&:hover": { color: "text.primary", borderColor: "#22B8CF" },
-                        }}
-                      >
-                        <ChevronRight size={14} />
-                      </IconButton>
-                    </Box>
-                  </Box>
-
-                  {/* Slider Body with Animated Depth Dissolve */}
-                  <Box sx={{ p: { xs: 1.8, sm: 2.2 }, minHeight: { xs: "210px", sm: "190px" } }}>
-                    <AnimatePresence mode="wait">
-                      {activeSlide === 0 ? (
-                        /* SLIDE 0: AI-POWERED 10X VELOCITY */
-                        <motion.div
-                          key="slide-ai-velocity"
-                          initial={{ opacity: 0, x: -16, filter: "blur(6px)" }}
-                          animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                          exit={{ opacity: 0, x: 16, filter: "blur(6px)" }}
-                          transition={{ duration: 0.38, ease: appleEase }}
-                        >
-                          {/* Slide Title & Value Statement */}
-                          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1.2 }}>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                              <Box
-                                sx={{
-                                  width: 32,
-                                  height: 32,
-                                  borderRadius: "8px",
-                                  backgroundColor: "rgba(34, 184, 207, 0.15)",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  color: "#22B8CF",
-                                  boxShadow: "0 0 12px rgba(34, 184, 207, 0.3)",
-                                }}
-                              >
-                                <Zap size={17} />
-                              </Box>
-                              <Box>
-                                <Typography
-                                  variant="subtitle2"
-                                  sx={{
-                                    fontWeight: 800,
-                                    fontSize: { xs: "0.95rem", sm: "1.02rem" },
-                                    color: "text.primary",
-                                    lineHeight: 1.2,
-                                  }}
-                                >
-                                  AI-Augmented 10x Engineering Velocity
-                                </Typography>
-                                <Typography
-                                  variant="caption"
-                                  sx={{
-                                    color: "#22B8CF",
-                                    fontFamily: "var(--font-mono)",
-                                    fontSize: "0.68rem",
-                                    fontWeight: 700,
-                                  }}
-                                >
-                                  RAPID PRODUCTION SHIPPING &bull; AUTOMATED QUALITY
-                                </Typography>
-                              </Box>
-                            </Box>
-
-                            <Box
-                              sx={{
-                                display: { xs: "none", sm: "inline-flex" },
-                                alignItems: "center",
-                                gap: 0.6,
-                                px: 1,
-                                py: 0.3,
-                                borderRadius: "6px",
-                                backgroundColor: "rgba(34, 184, 207, 0.12)",
-                                color: "#22B8CF",
-                                fontFamily: "var(--font-mono)",
-                                fontSize: "0.66rem",
-                                fontWeight: 800,
-                              }}
-                            >
-                              <Rocket size={11} />
-                              3x-5x FASTER DELIVERY
-                            </Box>
-                          </Box>
-
-                          {/* Hook Paragraph */}
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: "text.secondary",
-                              fontSize: "0.82rem",
-                              lineHeight: 1.55,
-                              mb: 1.8,
-                            }}
-                          >
-                            I harness modern AI coding workflows (LLMs, AST codemods, and automated testing) to turn complex requirements into high-performance production code in hours instead of weeks—eliminating repetitive boilerplate while guaranteeing strict type safety.
-                          </Typography>
-
-                          {/* 3 High-Impact Capability Cards */}
-                          <Box
-                            sx={{
-                              display: "grid",
-                              gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
-                              gap: 1.2,
-                              mb: 1.4,
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                p: 1.2,
-                                borderRadius: "10px",
-                                backgroundColor: isDark
-                                  ? "rgba(255, 255, 255, 0.03)"
-                                  : "rgba(41, 39, 100, 0.04)",
-                                border: "1px solid",
-                                borderColor: isDark
-                                  ? "rgba(34, 184, 207, 0.2)"
-                                  : "rgba(41, 39, 100, 0.1)",
-                              }}
-                            >
-                              <Box sx={{ display: "flex", alignItems: "center", gap: 0.6, mb: 0.4 }}>
-                                <Clock size={13} color="#22B8CF" />
-                                <Typography variant="caption" sx={{ fontWeight: 800, fontSize: "0.74rem", color: "text.primary" }}>
-                                  5x Faster Sprints
-                                </Typography>
-                              </Box>
-                              <Typography variant="caption" sx={{ color: "text.secondary", fontSize: "0.68rem", lineHeight: 1.35, display: "block" }}>
-                                Instant scaffolding of Next.js modules, form state &amp; API schemas.
-                              </Typography>
-                            </Box>
-
-                            <Box
-                              sx={{
-                                p: 1.2,
-                                borderRadius: "10px",
-                                backgroundColor: isDark
-                                  ? "rgba(255, 255, 255, 0.03)"
-                                  : "rgba(41, 39, 100, 0.04)",
-                                border: "1px solid",
-                                borderColor: isDark
-                                  ? "rgba(34, 184, 207, 0.2)"
-                                  : "rgba(41, 39, 100, 0.1)",
-                              }}
-                            >
-                              <Box sx={{ display: "flex", alignItems: "center", gap: 0.6, mb: 0.4 }}>
-                                <Code2 size={13} color="#38BDF8" />
-                                <Typography variant="caption" sx={{ fontWeight: 800, fontSize: "0.74rem", color: "text.primary" }}>
-                                  Intelligent Tests
-                                </Typography>
-                              </Box>
-                              <Typography variant="caption" sx={{ color: "text.secondary", fontSize: "0.68rem", lineHeight: 1.35, display: "block" }}>
-                                Automated edge-case unit tests &amp; schema contract validation.
-                              </Typography>
-                            </Box>
-
-                            <Box
-                              sx={{
-                                p: 1.2,
-                                borderRadius: "10px",
-                                backgroundColor: isDark
-                                  ? "rgba(255, 255, 255, 0.03)"
-                                  : "rgba(41, 39, 100, 0.04)",
-                                border: "1px solid",
-                                borderColor: isDark
-                                  ? "rgba(34, 184, 207, 0.2)"
-                                  : "rgba(41, 39, 100, 0.1)",
-                              }}
-                            >
-                              <Box sx={{ display: "flex", alignItems: "center", gap: 0.6, mb: 0.4 }}>
-                                <ShieldCheck size={13} color="#22C55E" />
-                                <Typography variant="caption" sx={{ fontWeight: 800, fontSize: "0.74rem", color: "text.primary" }}>
-                                  Strict Type Safety
-                                </Typography>
-                              </Box>
-                              <Typography variant="caption" sx={{ color: "text.secondary", fontSize: "0.68rem", lineHeight: 1.35, display: "block" }}>
-                                100% strict TypeScript types with zero technical debt or shortcuts.
-                              </Typography>
-                            </Box>
-                          </Box>
-
-                          {/* Live Velocity Badges */}
-                          <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1 }}>
-                            <Box
-                              sx={{
-                                px: 1,
-                                py: 0.25,
-                                borderRadius: "4px",
-                                backgroundColor: "rgba(34, 184, 207, 0.1)",
-                                color: "#22B8CF",
-                                fontSize: "0.66rem",
-                                fontFamily: "var(--font-mono)",
-                                fontWeight: 700,
-                              }}
-                            >
-                              ● 10x Rapid Iteration
-                            </Box>
-                            <Box
-                              sx={{
-                                px: 1,
-                                py: 0.25,
-                                borderRadius: "4px",
-                                backgroundColor: "rgba(56, 189, 248, 0.1)",
-                                color: "#38BDF8",
-                                fontSize: "0.66rem",
-                                fontFamily: "var(--font-mono)",
-                                fontWeight: 700,
-                              }}
-                            >
-                              ● 60% Reduced Time-to-Market
-                            </Box>
-                            <Box
-                              sx={{
-                                px: 1,
-                                py: 0.25,
-                                borderRadius: "4px",
-                                backgroundColor: "rgba(34, 197, 94, 0.1)",
-                                color: "#22C55E",
-                                fontSize: "0.66rem",
-                                fontFamily: "var(--font-mono)",
-                                fontWeight: 700,
-                              }}
-                            >
-                              ● Continuous AI Code Audits
-                            </Box>
-                          </Box>
-                        </motion.div>
-                      ) : (
-                        /* SLIDE 1: COMPLEX SYSTEMS SOLVER */
-                        <motion.div
-                          key="slide-complex-solver"
-                          initial={{ opacity: 0, x: 16, filter: "blur(6px)" }}
-                          animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                          exit={{ opacity: 0, x: -16, filter: "blur(6px)" }}
-                          transition={{ duration: 0.38, ease: appleEase }}
-                        >
-                          {/* Slide Title & Value Statement */}
-                          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1.2 }}>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                              <Box
-                                sx={{
-                                  width: 32,
-                                  height: 32,
-                                  borderRadius: "8px",
-                                  backgroundColor: "rgba(184, 149, 85, 0.15)",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  color: "#D4BA82",
-                                  boxShadow: "0 0 12px rgba(184, 149, 85, 0.3)",
-                                }}
-                              >
-                                <Cpu size={17} />
-                              </Box>
-                              <Box>
-                                <Typography
-                                  variant="subtitle2"
-                                  sx={{
-                                    fontWeight: 800,
-                                    fontSize: { xs: "0.95rem", sm: "1.02rem" },
-                                    color: "text.primary",
-                                    lineHeight: 1.2,
-                                  }}
-                                >
-                                  Mastery in Complex Architecture &amp; Hard Engineering
-                                </Typography>
-                                <Typography
-                                  variant="caption"
-                                  sx={{
-                                    color: isDark ? "#D4BA82" : "#96753a",
-                                    fontFamily: "var(--font-mono)",
-                                    fontSize: "0.68rem",
-                                    fontWeight: 700,
-                                  }}
-                                >
-                                  HIGH CONCURRENCY &bull; ZERO-LAG RESILIENCE
-                                </Typography>
-                              </Box>
-                            </Box>
-
-                            <Box
-                              sx={{
-                                display: { xs: "none", sm: "inline-flex" },
-                                alignItems: "center",
-                                gap: 0.6,
-                                px: 1,
-                                py: 0.3,
-                                borderRadius: "6px",
-                                backgroundColor: "rgba(184, 149, 85, 0.14)",
-                                color: isDark ? "#D4BA82" : "#96753a",
-                                fontFamily: "var(--font-mono)",
-                                fontSize: "0.66rem",
-                                fontWeight: 800,
-                              }}
-                            >
-                              <Layers size={11} />
-                              MISSION-CRITICAL SCALE
-                            </Box>
-                          </Box>
-
-                          {/* Hook Paragraph */}
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: "text.secondary",
-                              fontSize: "0.82rem",
-                              lineHeight: 1.55,
-                              mb: 1.8,
-                            }}
-                          >
-                            Where generic solutions fail, true engineering begins. I thrive on solving difficult frontend bottlenecks: sub-16ms search latencies across consolidated airline GDS inventories, dynamic multi-tenant CSS variable injection, and high-frequency WebSockets.
-                          </Typography>
-
-                          {/* 3 Real Production Solution Cards */}
-                          <Box
-                            sx={{
-                              display: "grid",
-                              gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
-                              gap: 1.2,
-                              mb: 1.4,
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                p: 1.2,
-                                borderRadius: "10px",
-                                backgroundColor: isDark
-                                  ? "rgba(255, 255, 255, 0.03)"
-                                  : "rgba(41, 39, 100, 0.04)",
-                                border: "1px solid",
-                                borderColor: isDark
-                                  ? "rgba(212, 186, 130, 0.2)"
-                                  : "rgba(184, 149, 85, 0.15)",
-                              }}
-                            >
-                              <Box sx={{ display: "flex", alignItems: "center", gap: 0.6, mb: 0.4 }}>
-                                <Zap size={13} color="#22B8CF" />
-                                <Typography variant="caption" sx={{ fontWeight: 800, fontSize: "0.74rem", color: "text.primary" }}>
-                                  &lt; 16ms Latency
-                                </Typography>
-                              </Box>
-                              <Typography variant="caption" sx={{ color: "text.secondary", fontSize: "0.68rem", lineHeight: 1.35, display: "block" }}>
-                                Memoized Redux filtering 800+ multi-leg itineraries on TripFindy.
-                              </Typography>
-                            </Box>
-
-                            <Box
-                              sx={{
-                                p: 1.2,
-                                borderRadius: "10px",
-                                backgroundColor: isDark
-                                  ? "rgba(255, 255, 255, 0.03)"
-                                  : "rgba(41, 39, 100, 0.04)",
-                                border: "1px solid",
-                                borderColor: isDark
-                                  ? "rgba(212, 186, 130, 0.2)"
-                                  : "rgba(184, 149, 85, 0.15)",
-                              }}
-                            >
-                              <Box sx={{ display: "flex", alignItems: "center", gap: 0.6, mb: 0.4 }}>
-                                <Layers size={13} color="#D4BA82" />
-                                <Typography variant="caption" sx={{ fontWeight: 800, fontSize: "0.74rem", color: "text.primary" }}>
-                                  Multi-Tenant Theming
-                                </Typography>
-                              </Box>
-                              <Typography variant="caption" sx={{ color: "text.secondary", fontSize: "0.68rem", lineHeight: 1.35, display: "block" }}>
-                                Dynamic runtime CSS variable injection across white-label travel agencies.
-                              </Typography>
-                            </Box>
-
-                            <Box
-                              sx={{
-                                p: 1.2,
-                                borderRadius: "10px",
-                                backgroundColor: isDark
-                                  ? "rgba(255, 255, 255, 0.03)"
-                                  : "rgba(41, 39, 100, 0.04)",
-                                border: "1px solid",
-                                borderColor: isDark
-                                  ? "rgba(212, 186, 130, 0.2)"
-                                  : "rgba(184, 149, 85, 0.15)",
-                              }}
-                            >
-                              <Box sx={{ display: "flex", alignItems: "center", gap: 0.6, mb: 0.4 }}>
-                                <Radio size={13} color="#22C55E" />
-                                <Typography variant="caption" sx={{ fontWeight: 800, fontSize: "0.74rem", color: "text.primary" }}>
-                                  Real-Time WebSockets
-                                </Typography>
-                              </Box>
-                              <Typography variant="caption" sx={{ color: "text.secondary", fontSize: "0.68rem", lineHeight: 1.35, display: "block" }}>
-                                GotiSMS 100k+ msg/hr CPaaS &amp; Safety GPS &lt;5s satellite sync.
-                              </Typography>
-                            </Box>
-                          </Box>
-
-                          {/* Live Architecture Badges */}
-                          <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1 }}>
-                            <Box
-                              sx={{
-                                px: 1,
-                                py: 0.25,
-                                borderRadius: "4px",
-                                backgroundColor: "rgba(34, 184, 207, 0.1)",
-                                color: "#22B8CF",
-                                fontSize: "0.66rem",
-                                fontFamily: "var(--font-mono)",
-                                fontWeight: 700,
-                              }}
-                            >
-                              ● Normalized Redux Toolkit
-                            </Box>
-                            <Box
-                              sx={{
-                                px: 1,
-                                py: 0.25,
-                                borderRadius: "4px",
-                                backgroundColor: "rgba(184, 149, 85, 0.12)",
-                                color: isDark ? "#D4BA82" : "#96753a",
-                                fontSize: "0.66rem",
-                                fontFamily: "var(--font-mono)",
-                                fontWeight: 700,
-                              }}
-                            >
-                              ● Dynamic Runtime Theming
-                            </Box>
-                            <Box
-                              sx={{
-                                px: 1,
-                                py: 0.25,
-                                borderRadius: "4px",
-                                backgroundColor: "rgba(34, 197, 94, 0.1)",
-                                color: "#22C55E",
-                                fontSize: "0.66rem",
-                                fontFamily: "var(--font-mono)",
-                                fontWeight: 700,
-                              }}
-                            >
-                              ● 99.98% High-Concurrency Uptime
-                            </Box>
-                          </Box>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </Box>
-
-                  {/* Subtle Auto-Play Slide Progress Bar */}
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "2px",
-                      backgroundColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <motion.div
-                      key={activeSlide}
-                      initial={{ width: "0%" }}
-                      animate={{ width: isPaused ? "100%" : "100%" }}
-                      transition={{ duration: 7, ease: "linear" }}
-                      style={{
-                        height: "100%",
-                        background:
-                          activeSlide === 0
-                            ? "linear-gradient(90deg, #22B8CF, #38BDF8)"
-                            : "linear-gradient(90deg, #B89555, #D4BA82)",
-                      }}
-                    />
-                  </Box>
-                </Box>
-              </motion.div>
-
-              {/* 05. Clean 4-Metric Glass Strip with Specular Sheen */}
-              {/* <motion.div
-                initial={{ opacity: 0, y: 22, filter: "blur(8px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.8, delay: 0.32, ease: appleEase }}
-              >
-                <Box
-                  className="apple-glass-sheen"
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(3, 1fr)" },
-                    gap: 1.2,
-                    mb: 2.8,
-                    p: 1.2,
-                    borderRadius: "16px",
-                    backgroundColor: isDark
-                      ? "rgba(16, 28, 53, 0.65)"
-                      : "rgba(255, 255, 255, 0.8)",
-                    border: "1px solid",
-                    borderColor: isDark
-                      ? "rgba(255, 255, 255, 0.1)"
-                      : "rgba(41, 39, 100, 0.1)",
-                    backdropFilter: "blur(20px)",
-                    boxShadow: isDark
-                      ? "0 12px 30px -10px rgba(0,0,0,0.5)"
-                      : "0 8px 25px -8px rgba(41, 39, 100, 0.08)",
-                  }}
-                >
-                  {keyMetrics.map((m) => (
-                    <motion.div
-                      key={m.label}
-                      whileHover={{ y: -2, scale: 1.02 }}
-                      transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                    >
-                      <Box
-                        sx={{
-                          px: 1.2,
-                          py: 0.85,
-                          borderRadius: "10px",
-                          backgroundColor: isDark
-                            ? "rgba(255, 255, 255, 0.025)"
-                            : "rgba(41, 39, 100, 0.025)",
-                          transition: "background-color 0.2s ease",
-                          "&:hover": {
-                            backgroundColor: isDark
-                              ? "rgba(34, 184, 207, 0.08)"
-                              : "rgba(41, 39, 100, 0.05)",
-                          },
-                        }}
-                      >
-                        <Typography
-                          variant="h6"
-                          sx={{
-                            fontFamily: "var(--font-mono)",
-                            fontWeight: 800,
-                            fontSize: { xs: "1.05rem", sm: "1.15rem" },
-                            color: "#22B8CF",
-                            lineHeight: 1.1,
-                            mb: 0.2,
-                          }}
-                        >
-                          {m.value}
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            display: "block",
-                            fontWeight: 700,
-                            fontSize: "0.72rem",
-                            color: "text.primary",
-                            lineHeight: 1.2,
-                          }}
-                        >
-                          {m.label}
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            display: "block",
-                            color: "text.secondary",
-                            fontSize: "0.64rem",
-                            fontFamily: "var(--font-mono)",
-                          }}
-                        >
-                          {m.sub}
-                        </Typography>
-                      </Box>
-                    </motion.div>
+                    </Tooltip>
                   ))}
                 </Box>
-              </motion.div> */}
-
-              {/* 06. Minimal Modern Tech Pills with Hover Bounce */}
-              <motion.div
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.38, ease: appleEase }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                    gap: 0.8,
-                    mb: 3.2,
-                  }}
-                >
-                  {coreTechPills.map((tech) => (
-                    <motion.div
-                      key={tech}
-                      whileHover={{ scale: 1.05, y: -1 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                    >
-                      <Box
-                        sx={{
-                          px: 1.1,
-                          py: 0.35,
-                          borderRadius: "6px",
-                          backgroundColor: isDark
-                            ? "rgba(255, 255, 255, 0.035)"
-                            : "rgba(41, 39, 100, 0.04)",
-                          border: "1px solid",
-                          borderColor: isDark
-                            ? "rgba(255, 255, 255, 0.1)"
-                            : "rgba(41, 39, 100, 0.1)",
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "0.72rem",
-                          fontWeight: 600,
-                          color: "text.primary",
-                          cursor: "default",
-                        }}
-                      >
-                        {tech}
-                      </Box>
-                    </motion.div>
-                  ))}
-                </Box>
-              </motion.div>
-
-              {/* 07. Apple-Style Magnetic Action Buttons & Verified Profiles */}
-              <motion.div
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.44, ease: appleEase }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                    gap: 1.6,
-                  }}
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                  >
-                    <Button
-                      variant="contained"
-                      size="large"
-                      onClick={() => handleScrollTo("projects")}
-                      endIcon={<ArrowRight size={16} />}
-                      sx={{
-                        px: 3.2,
-                        py: 1.25,
-                        fontSize: "0.92rem",
-                        fontWeight: 700,
-                        boxShadow: isDark
-                          ? "0 8px 24px rgba(34, 184, 207, 0.35)"
-                          : "0 8px 20px rgba(41, 39, 100, 0.22)",
-                      }}
-                    >
-                      Explore Work
-                    </Button>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                  >
-                    <Button
-                      variant="outlined"
-                      size="large"
-                      onClick={() => setResumeOpen(true)}
-                      startIcon={<FileText size={16} />}
-                      sx={{
-                        px: 2.8,
-                        py: 1.25,
-                        fontSize: "0.92rem",
-                        fontWeight: 700,
-                        borderColor: isDark
-                          ? "rgba(255, 255, 255, 0.2)"
-                          : "divider",
-                        "&:hover": {
-                          borderColor: isDark ? "#22B8CF" : "primary.main",
-                        },
-                      }}
-                    >
-                      Download CV
-                    </Button>
-                  </motion.div>
-
-                  {/* Instant Copy Email */}
-                  <SkiperCopyButton
-                    textToCopy={personalData.email}
-                    label="Copy Email"
-                    copiedLabel="Email Copied!"
-                  />
-
-                  {/* Verified Social Profile Icons */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1,
-                      pl: { xs: 0, sm: 1 },
-                      borderLeft: { sm: "1px solid" },
-                      borderColor: { sm: "divider" },
-                    }}
-                  >
-                    <Tooltip title="GitHub (@uzzal70)">
-                      <IconButton
-                        component="a"
-                        href={personalData.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="GitHub profile"
-                        sx={{
-                          color: "text.secondary",
-                          border: "1px solid",
-                          borderColor: "divider",
-                          transition: "all 0.2s ease",
-                          "&:hover": {
-                            color: "text.primary",
-                            borderColor: "#22B8CF",
-                            transform: "translateY(-2px)",
-                          },
-                        }}
-                      >
-                        <Github size={16} />
-                      </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title="LinkedIn (@uzzal70)">
-                      <IconButton
-                        component="a"
-                        href={personalData.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="LinkedIn profile"
-                        sx={{
-                          color: "text.secondary",
-                          border: "1px solid",
-                          borderColor: "divider",
-                          transition: "all 0.2s ease",
-                          "&:hover": {
-                            color: "text.primary",
-                            borderColor: "#4169F5",
-                            transform: "translateY(-2px)",
-                          },
-                        }}
-                      >
-                        <Linkedin size={16} />
-                      </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title="Direct Email (uzzalcse70@gmail.com)">
-                      <IconButton
-                        component="a"
-                        href={`mailto:${personalData.email}`}
-                        aria-label="Email developer"
-                        sx={{
-                          color: "text.secondary",
-                          border: "1px solid",
-                          borderColor: "divider",
-                          transition: "all 0.2s ease",
-                          "&:hover": {
-                            color: "text.primary",
-                            borderColor: "secondary.main",
-                            transform: "translateY(-2px)",
-                          },
-                        }}
-                      >
-                        <Mail size={16} />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                </Box>
-              </motion.div>
+              </Box>
             </Box>
 
-            {/* Right Column: Modern 3D Animated Avatar Centerpiece with Spatial Badges & Tilt Physics */}
+            {/* ------------------------- Right ------------------------- */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 30, filter: "blur(10px)" }}
-              animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.95, delay: 0.2, ease: appleEase }}
-              style={{
-                position: "relative",
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+              initial={{ opacity: 0, y: reduce ? 0 : 36 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduce ? 0 : 0.9, delay: reduce ? 0 : 0.35, ease }}
+              style={{ minWidth: 0 }}
             >
-              <ModernAvatar />
+              <Box
+                role="region"
+                aria-roledescription="carousel"
+                aria-label="Selected work"
+                tabIndex={0}
+                onKeyDown={onKeyDown}
+                onMouseEnter={() => setPaused(true)}
+                onMouseLeave={() => setPaused(false)}
+                onFocus={() => setPaused(true)}
+                onBlur={() => setPaused(false)}
+                sx={{
+                  outline: "none",
+                  borderRadius: "20px",
+                  "&:focus-visible": { boxShadow: `0 0 0 3px ${accent}88` },
+                }}
+              >
+                {/* header */}
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+                  <Typography aria-live="polite" sx={{ fontWeight: 700, fontSize: "0.9rem" }}>
+                    Selected work
+                    <Box component="span" sx={{ color: "text.secondary", fontWeight: 500, ml: 1 }}>
+                      {index + 1} of {n}
+                    </Box>
+                  </Typography>
+                  <Box sx={{ display: "flex", gap: 0.8 }}>
+                    {[-1, 1].map((d) => (
+                      <IconButton
+                        key={d}
+                        size="small"
+                        onClick={() => step(d)}
+                        aria-label={d === -1 ? "Previous project" : "Next project"}
+                        sx={{
+                          width: 32,
+                          height: 32,
+                          border: "1px solid",
+                          borderColor: hairline,
+                          color: "text.secondary",
+                          "&:hover": { color: accent, borderColor: accent },
+                        }}
+                      >
+                        {d === -1 ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+                      </IconButton>
+                    ))}
+                  </Box>
+                </Box>
+
+                {/* ticket stack */}
+                <Box sx={{ position: "relative", height: { xs: 506, sm: 346 } }}>
+                  {works.map((w, i) => {
+                    const offset = (i - index + n) % n;
+                    const leaving = offset === n - 1;
+                    const front = offset === 0;
+                    const a = isDark ? w.accent : w.accentLight;
+
+                    const pose = leaving
+                      ? { x: -80, y: 0, scale: 0.97, rotate: reduce ? 0 : -5, opacity: 0 }
+                      : offset <= 2
+                        ? {
+                          x: 0,
+                          y: offset * 18,
+                          scale: 1 - offset * 0.05,
+                          rotate: 0,
+                          opacity: 1 - offset * 0.2,
+                        }
+                        : { x: 0, y: 36, scale: 0.9, rotate: 0, opacity: 0 };
+
+                    return (
+                      <motion.div
+                        key={w.id}
+                        animate={pose}
+                        transition={{ duration: reduce ? 0 : 0.6, ease }}
+                        drag={front ? "x" : false}
+                        dragConstraints={{ left: 0, right: 0 }}
+                        dragElastic={0.2}
+                        dragSnapToOrigin
+                        onDragEnd={onDragEnd}
+                        onClick={() => !front && offset <= 2 && setIndex(i)}
+                        role={front ? undefined : "button"}
+                        aria-label={front ? undefined : `Show ${w.tab}`}
+                        aria-hidden={offset > 2 || leaving}
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          zIndex: n - offset,
+                          transformOrigin: "50% 100%",
+                          touchAction: "pan-y",
+                          cursor: front ? "grab" : offset <= 2 ? "pointer" : "default",
+                          pointerEvents: offset <= 2 ? "auto" : "none",
+                          filter: isDark
+                            ? "drop-shadow(0 22px 28px rgba(0,0,0,0.45))"
+                            : "drop-shadow(0 18px 24px rgba(15,23,42,0.16))",
+                        }}
+                      >
+                        <Ticket work={w} accent={a} tok={tok} interactive={front} />
+                      </motion.div>
+                    );
+                  })}
+                </Box>
+
+                {/* progress rail */}
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: `repeat(${n}, 1fr)`,
+                    gap: 0.9,
+                    mt: 1.2,
+                  }}
+                >
+                  {works.map((w, i) => {
+                    const isActive = i === index;
+                    const done = i < index;
+                    const c = isDark ? w.accent : w.accentLight;
+                    return (
+                      <Box
+                        key={w.id}
+                        component="button"
+                        type="button"
+                        onClick={() => setIndex(i)}
+                        aria-label={`Show ${w.tab}`}
+                        aria-current={isActive}
+                        sx={{
+                          all: "unset",
+                          cursor: "pointer",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 0.8,
+                          minWidth: 0,
+                          py: 0.5,
+                          "&:focus-visible .rail": { outline: `2px solid ${c}`, outlineOffset: 3 },
+                        }}
+                      >
+                        <Box
+                          className="rail"
+                          sx={{
+                            position: "relative",
+                            height: 3,
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            backgroundColor: isDark ? "rgba(255,255,255,0.14)" : "rgba(15,23,42,0.12)",
+                          }}
+                        >
+                          <Box
+                            key={isActive ? `run-${index}` : `idle-${i}`}
+                            onAnimationEnd={() => isActive && !reduce && step(1)}
+                            sx={{
+                              position: "absolute",
+                              inset: 0,
+                              backgroundColor: c,
+                              width: done || (isActive && reduce) ? "100%" : 0,
+                              animation:
+                                isActive && !reduce
+                                  ? `heroFill ${AUTOPLAY_MS}ms linear forwards`
+                                  : "none",
+                              animationPlayState: paused ? "paused" : "running",
+                              "@keyframes heroFill": {
+                                from: { width: "0%" },
+                                to: { width: "100%" },
+                              },
+                            }}
+                          />
+                        </Box>
+                        <Typography
+                          noWrap
+                          sx={{
+                            display: { xs: "none", sm: "block" },
+                            fontSize: "0.72rem",
+                            fontWeight: isActive ? 700 : 500,
+                            color: isActive ? "text.primary" : "text.secondary",
+                          }}
+                        >
+                          {w.tab}
+                        </Typography>
+                      </Box>
+                    );
+                  })}
+                </Box>
+              </Box>
             </motion.div>
           </Box>
         </Container>
       </Box>
 
-      {/* UK CV Preview Modal */}
       <ResumeModal open={resumeOpen} onClose={() => setResumeOpen(false)} />
     </>
   );
