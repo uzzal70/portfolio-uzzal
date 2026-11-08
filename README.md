@@ -1,6 +1,6 @@
 # Premium Senior Full-Stack Developer Portfolio
 
-An Awwwards-inspired, editorial-grade personal portfolio website built for a **Senior Frontend-Focused Full-Stack Developer** with 3–5 years of professional engineering experience.
+An Awwwards-inspired, editorial-grade personal portfolio website built for a **Senior Frontend-Focused Full-Stack Developer** with 5+ years of professional engineering experience.
 
 Built with **Next.js 14 (App Router)**, **TypeScript**, **Material UI v5**, **Framer Motion**, and **CSS Variables**.
 
@@ -167,3 +167,5 @@ The contact endpoint (`POST /api/contact`) includes:
 - Client-side and server-side schema verification.
 - Honeypot bot protection.
 - Prepared integration hooks for transactional email providers (SendGrid, Resend, AWS SES, or custom SMTP).
+
+# portfolio-uzzal
