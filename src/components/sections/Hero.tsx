@@ -140,8 +140,7 @@ const works: Work[] = [
 const headlineLines = [
   "Interfaces for",
   "B2B & B2C OTA, E-commerce",
-  "and more",
-  "products.",
+  "and more products.",
 ];
 
 const facts = [
@@ -524,7 +523,7 @@ export default function Hero() {
                 component="h1"
                 aria-label={headlineLines.join(" ")}
                 sx={{
-                  fontSize: { xs: "2.6rem", sm: "3.4rem", md: "3.8rem", lg: "3.5rem" },
+                  fontSize: { xs: "2rem", sm: "3rem", md: "3rem", lg: "3.5rem" },
                   fontWeight: 800,
                   lineHeight: 1.04,
                   letterSpacing: "-0.04em",
