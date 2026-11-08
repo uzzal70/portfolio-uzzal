@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" width="1280" height="800">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A1224" />
+      <stop offset="100%" stop-color="#101C35" />
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#16264A" />
+      <stop offset="100%" stop-color="#0E182D" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="800" fill="url(#bg)" />
+
+  <!-- Top Navigation Header -->
+  <rect x="0" y="0" width="1280" height="72" fill="#0A1224" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+  
+  <!-- Logo -->
+  <rect x="60" y="18" width="36" height="36" rx="8" fill="url(#emeraldGrad)" />
+  <text x="78" y="42" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="900" fill="#FFFFFF" text-anchor="middle">H</text>
+  <text x="110" y="42" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="800" fill="#FFFFFF">Hotel<tspan fill="#10B981">Lagbe</tspan></text>
+  <text x="235" y="40" font-family="'JetBrains Mono', Menlo, monospace" font-size="11" font-weight="700" fill="#10B981" letter-spacing="1">B2B &amp; B2C ENGINE</text>
+
+  <!-- Nav links -->
+  <text x="780" y="42" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#9C9CB2">Destinations</text>
+  <text x="890" y="42" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#9C9CB2">Hotels &amp; Resorts</text>
+  <text x="1020" y="42" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#9C9CB2">Corporate Rates</text>
+  <rect x="1140" y="18" width="90" height="36" rx="6" fill="url(#emeraldGrad)" />
+  <text x="1185" y="41" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Agent Login</text>
+
+  <!-- Hero Search Panel -->
+  <rect x="60" y="105" width="1160" height="150" rx="16" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+  
+  <text x="90" y="145" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">Find &amp; Allocate Corporate Rooms Across 12,000+ Verified Properties</text>
+  <text x="90" y="170" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#9C9CB2">Instant confirmation, agent credit ledger, and dynamic tariff matrix with zero double-booking.</text>
+
+  <!-- Search Fields Strip -->
+  <rect x="90" y="190" width="280" height="46" rx="8" fill="#101C35" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+  <text x="110" y="218" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#FFFFFF">Cox's Bazar, Bangladesh</text>
+
+  <rect x="385" y="190" width="230" height="46" rx="8" fill="#101C35" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+  <text x="405" y="218" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#FFFFFF">14 Nov – 18 Nov (4 Nights)</text>
+
+  <rect x="630" y="190" width="230" height="46" rx="8" fill="#101C35" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+  <text x="650" y="218" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#FFFFFF">2 Guests &bull; 1 Deluxe Room</text>
+
+  <rect x="875" y="190" width="210" height="46" rx="8" fill="#10B981" />
+  <text x="980" y="218" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">Search Inventory</text>
+
+  <!-- Grid of Hotel Cards -->
+  <!-- Card 1 -->
+  <rect x="60" y="285" width="365" height="460" rx="14" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+  <rect x="60" y="285" width="365" height="210" rx="14" fill="#0E182D" />
+  <!-- Visual Room Graphic -->
+  <rect x="80" y="305" width="325" height="170" rx="10" fill="#16264A" stroke="rgba(16, 185, 129, 0.3)" stroke-width="1" />
+  <text x="100" y="340" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">Sayeman Beach Resort</text>
+  <text x="100" y="365" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#10B981">&starf;&starf;&starf;&starf;&starf; 5-Star Luxury Seafront</text>
+  <text x="100" y="390" font-family="'JetBrains Mono', monospace" font-size="11" fill="#9C9CB2">Ocean View Deluxe &bull; King Bed</text>
+
+  <text x="80" y="525" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">Marine Drive, Kolatoli, Cox's Bazar</text>
+  <text x="80" y="550" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#9C9CB2">Infinity Pool &bull; Free Buffet Breakfast &bull; High-Speed WiFi</text>
+  
+  <rect x="80" y="575" width="110" height="26" rx="4" fill="rgba(16, 185, 129, 0.15)" />
+  <text x="135" y="593" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="#10B981" text-anchor="middle">INSTANT VOUCHER</text>
+
+  <rect x="80" y="660" width="325" height="1" fill="rgba(255,255,255,0.08)" />
+  <text x="80" y="695" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#9C9CB2">Net Agency Rate</text>
+  <text x="80" y="725" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="900" fill="#10B981">৳11,500 <tspan font-size="12" font-weight="400" fill="#9C9CB2">/ night</tspan></text>
+  <rect x="295" y="690" width="110" height="38" rx="6" fill="#10B981" />
+  <text x="350" y="714" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Book Room</text>
+
+  <!-- Card 2 -->
+  <rect x="455" y="285" width="365" height="460" rx="14" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+  <rect x="455" y="285" width="365" height="210" rx="14" fill="#0E182D" />
+  <rect x="475" y="305" width="325" height="170" rx="10" fill="#16264A" stroke="rgba(16, 185, 129, 0.3)" stroke-width="1" />
+  <text x="495" y="340" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">Radisson Blu Water Garden</text>
+  <text x="495" y="365" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#10B981">&starf;&starf;&starf;&starf;&starf; 5-Star Airport City Oasis</text>
+  <text x="495" y="390" font-family="'JetBrains Mono', monospace" font-size="11" fill="#9C9CB2">Superior Room &bull; City View</text>
+
+  <text x="475" y="525" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">Airport Road, Dhaka, Bangladesh</text>
+  <text x="475" y="550" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#9C9CB2">Business Lounge &bull; Airport Shuttle &bull; Health Club</text>
+
+  <rect x="475" y="575" width="130" height="26" rx="4" fill="rgba(16, 185, 129, 0.15)" />
+  <text x="540" y="593" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="#10B981" text-anchor="middle">CORPORATE PREFERRED</text>
+
+  <rect x="475" y="660" width="325" height="1" fill="rgba(255,255,255,0.08)" />
+  <text x="475" y="695" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#9C9CB2">Net Agency Rate</text>
+  <text x="475" y="725" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="900" fill="#10B981">৳16,800 <tspan font-size="12" font-weight="400" fill="#9C9CB2">/ night</tspan></text>
+  <rect x="690" y="690" width="110" height="38" rx="6" fill="#10B981" />
+  <text x="745" y="714" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Book Room</text>
+
+  <!-- Card 3 -->
+  <rect x="850" y="285" width="365" height="460" rx="14" fill="url(#cardGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+  <rect x="850" y="285" width="365" height="210" rx="14" fill="#0E182D" />
+  <rect x="870" y="305" width="325" height="170" rx="10" fill="#16264A" stroke="rgba(16, 185, 129, 0.3)" stroke-width="1" />
+  <text x="890" y="340" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">Grand Sultan Tea Resort</text>
+  <text x="890" y="365" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#10B981">&starf;&starf;&starf;&starf;&starf; 5-Star Eco Resort</text>
+  <text x="890" y="390" font-family="'JetBrains Mono', monospace" font-size="11" fill="#9C9CB2">King Deluxe &bull; Forest View</text>
+
+  <text x="870" y="525" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF">Sreemangal, Moulvibazar, Sylhet</text>
+  <text x="870" y="550" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#9C9CB2">Golf Course &bull; Temperature Controlled Pool &bull; Spa</text>
+
+  <rect x="870" y="575" width="110" height="26" rx="4" fill="rgba(16, 185, 129, 0.15)" />
+  <text x="925" y="593" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="#10B981" text-anchor="middle">INSTANT VOUCHER</text>
+
+  <rect x="870" y="660" width="325" height="1" fill="rgba(255,255,255,0.08)" />
+  <text x="870" y="695" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#9C9CB2">Net Agency Rate</text>
+  <text x="870" y="725" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="900" fill="#10B981">৳14,200 <tspan font-size="12" font-weight="400" fill="#9C9CB2">/ night</tspan></text>
+  <rect x="1085" y="690" width="110" height="38" rx="6" fill="#10B981" />
+  <text x="1140" y="714" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Book Room</text>
+</svg>

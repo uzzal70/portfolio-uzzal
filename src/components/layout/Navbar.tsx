@@ -15,20 +15,18 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import { Menu, X, ArrowUpRight, Download, Send } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, ArrowUpRight, FileText } from "lucide-react";
 import ThemeToggle from "../common/ThemeToggle";
+import ResumeModal from "../common/ResumeModal";
 import { personalData } from "@/data/personal";
 import { useAppTheme } from "@/theme/ThemeContext";
 
 const navItems = [
   { label: "Home", href: "#hero" },
   { label: "About", href: "#about" },
-  { label: "Expertise", href: "#expertise" },
   { label: "Projects", href: "#projects" },
-  { label: "Strengths", href: "#strengths" },
   { label: "Experience", href: "#experience" },
-  { label: "Workflow", href: "#workflow" },
+  { label: "Resume", href: "resume-modal" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -36,6 +34,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [resumeModalOpen, setResumeModalOpen] = useState(false);
   const { mode } = useAppTheme();
   const isDark = mode === "dark";
 
@@ -43,13 +42,13 @@ export default function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
-      const sections = navItems.map((item) => item.href.substring(1));
+      const sectionIds = ["hero", "about", "projects", "experience", "contact"];
       const scrollPosition = window.scrollY + 200;
 
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sectionIds[i]);
         if (el && el.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i]);
+          setActiveSection(sectionIds[i]);
           break;
         }
       }
@@ -65,6 +64,10 @@ export default function Navbar() {
 
   const handleNavClick = (href: string) => {
     setMobileOpen(false);
+    if (href === "resume-modal") {
+      setResumeModalOpen(true);
+      return;
+    }
     const target = document.querySelector(href);
     if (target) {
       target.scrollIntoView({ behavior: "smooth" });
@@ -79,38 +82,46 @@ export default function Navbar() {
         sx={{
           backgroundColor: isScrolled
             ? isDark
-              ? "rgba(13, 13, 20, 0.88)"
-              : "rgba(250, 249, 246, 0.88)"
+              ? "rgba(10, 18, 36, 0.92)"
+              : "rgba(250, 249, 246, 0.92)"
             : "transparent",
           backdropFilter: isScrolled ? "blur(16px)" : "none",
           borderBottom: isScrolled ? "1px solid" : "1px solid transparent",
-          borderColor: isDark ? "rgba(35, 35, 54, 0.8)" : "rgba(234, 232, 226, 0.8)",
-          transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+          borderColor: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(232, 229, 221, 0.85)",
+          transition: "background-color 0.25s ease, border-color 0.25s ease, padding 0.25s ease",
           zIndex: 1100,
-          py: { xs: 0.5, md: 1 },
+          py: isScrolled ? 0.75 : 1.25,
         }}
       >
-        <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
-            {/* Logo / Monogram */}
+        <Container maxWidth="lg">
+          <Toolbar
+            disableGutters
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              minHeight: { xs: 52, md: 60 },
+            }}
+          >
+            {/* Logo: Compact & Professional */}
             <Box
               component="a"
               href="#hero"
               sx={{
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
-                gap: 1.5,
+                gap: 1.25,
                 textDecoration: "none",
                 color: "inherit",
               }}
             >
               <Box
                 sx={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: "10px",
+                  width: 34,
+                  height: 34,
+                  borderRadius: "8px",
                   background: isDark
-                    ? "linear-gradient(135deg, #8580FF 0%, #292764 100%)"
+                    ? "linear-gradient(135deg, #9490FF 0%, #292764 100%)"
                     : "linear-gradient(135deg, #292764 0%, #3e3b8a 100%)",
                   display: "flex",
                   alignItems: "center",
@@ -118,182 +129,129 @@ export default function Navbar() {
                   color: "#FFFFFF",
                   fontFamily: "var(--font-mono)",
                   fontWeight: 700,
-                  fontSize: "0.88rem",
-                  letterSpacing: "0.05em",
+                  fontSize: "0.82rem",
+                  letterSpacing: "0.04em",
                   border: "1px solid",
                   borderColor: "secondary.main",
-                  boxShadow: "0 2px 10px rgba(41, 39, 100, 0.15)",
+                  flexShrink: 0,
                 }}
               >
                 {personalData.initials}
               </Box>
-              <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                <Typography
-                  variant="subtitle1"
-                  sx={{
-                    fontFamily: "var(--font-serif)",
-                    fontWeight: 700,
-                    letterSpacing: "-0.01em",
-                    lineHeight: 1.1,
-                    color: "text.primary",
-                  }}
-                >
-                  {personalData.name}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.68rem",
-                    color: "secondary.main",
-                    letterSpacing: "0.06em",
-                    display: "block",
-                  }}
-                >
-                  Senior Frontend Dev
-                </Typography>
-              </Box>
+
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  letterSpacing: "-0.01em",
+                  color: "text.primary",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {personalData.name}
+              </Typography>
             </Box>
 
-            {/* Desktop Navigation Links */}
+            {/* Desktop Navigation Links: Clean, Short, Uncluttered */}
             <Box
               sx={{
-                display: { xs: "none", lg: "flex" },
+                display: { xs: "none", md: "flex" },
                 alignItems: "center",
                 gap: 0.5,
-                backgroundColor: isDark ? "rgba(255, 255, 255, 0.03)" : "rgba(0, 0, 0, 0.02)",
-                p: "4px 8px",
+                px: 1.5,
+                py: 0.5,
                 borderRadius: "30px",
+                backgroundColor: isDark ? "rgba(255, 255, 255, 0.03)" : "rgba(0, 0, 0, 0.02)",
                 border: "1px solid",
                 borderColor: "divider",
               }}
             >
               {navItems.map((item) => {
-                const isActive = activeSection === item.href.substring(1);
+                const isResume = item.href === "resume-modal";
+                const isActive = !isResume && activeSection === item.href.substring(1);
                 return (
                   <Box
                     key={item.label}
-                    component="a"
-                    href={item.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavClick(item.href);
-                    }}
+                    component="button"
+                    onClick={() => handleNavClick(item.href)}
                     sx={{
-                      position: "relative",
-                      px: 1.8,
-                      py: 0.75,
-                      textDecoration: "none",
-                      color: isActive ? (isDark ? "#FFFFFF" : "primary.main") : "text.secondary",
-                      fontSize: "0.85rem",
-                      fontWeight: isActive ? 600 : 500,
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      px: 1.6,
+                      py: 0.65,
                       borderRadius: "20px",
-                      transition: "color 0.2s ease",
+                      fontSize: "0.86rem",
+                      fontWeight: isActive ? 600 : 500,
+                      color: isActive ? "secondary.main" : "text.secondary",
+                      transition: "color 0.2s ease, background-color 0.2s ease",
+                      backgroundColor: isActive
+                        ? isDark
+                          ? "rgba(148, 144, 255, 0.12)"
+                          : "rgba(41, 39, 100, 0.06)"
+                        : "transparent",
                       "&:hover": {
                         color: "text.primary",
                       },
                     }}
                   >
                     {item.label}
-                    {isActive && (
-                      <motion.div
-                        layoutId="activeNavPill"
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          borderRadius: "20px",
-                          backgroundColor: isDark
-                            ? "rgba(133, 128, 255, 0.15)"
-                            : "rgba(41, 39, 100, 0.08)",
-                          border: `1px solid ${isDark ? "#8580FF33" : "#29276422"}`,
-                          zIndex: -1,
-                        }}
-                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                      />
-                    )}
                   </Box>
                 );
               })}
             </Box>
 
-            {/* Right Action Controls */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 1.5 } }}>
+            {/* Right Action Controls: Theme Toggle & Clear CTA */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
               <ThemeToggle />
 
               <Button
-                component="a"
-                href={personalData.resumeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="outlined"
-                size="small"
-                startIcon={<Download size={15} />}
-                sx={{
-                  display: { xs: "none", sm: "inline-flex" },
-                  fontSize: "0.82rem",
-                  py: 0.8,
-                  px: 1.8,
-                  borderColor: "divider",
-                  "&:hover": {
-                    borderColor: "secondary.main",
-                  },
-                }}
-              >
-                Resume
-              </Button>
-
-              <Button
-                component="a"
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick("#contact");
-                }}
                 variant="contained"
                 size="small"
+                onClick={() => handleNavClick("#contact")}
                 endIcon={<ArrowUpRight size={15} />}
                 sx={{
-                  fontSize: "0.82rem",
+                  display: { xs: "none", sm: "inline-flex" },
+                  fontSize: "0.84rem",
                   py: 0.8,
-                  px: 2,
-                  display: { xs: "none", md: "inline-flex" },
+                  px: 2.2,
+                  fontWeight: 600,
                 }}
               >
                 Let&apos;s Talk
               </Button>
 
-              {/* Mobile Drawer Hamburger */}
+              {/* Mobile Drawer Trigger */}
               <IconButton
                 onClick={handleDrawerToggle}
                 aria-label="Toggle navigation drawer"
                 sx={{
-                  display: { lg: "none" },
+                  display: { md: "none" },
                   color: "text.primary",
-                  p: 1,
-                  borderRadius: 2,
+                  p: 0.8,
+                  borderRadius: 1.5,
                   border: "1px solid",
                   borderColor: "divider",
                 }}
               >
-                {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
               </IconButton>
             </Box>
           </Toolbar>
         </Container>
       </AppBar>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Navigation Drawer */}
       <Drawer
         anchor="right"
         open={mobileOpen}
         onClose={handleDrawerToggle}
-        ModalProps={{ keepMounted: true }}
         PaperProps={{
           sx: {
-            width: "80%",
-            maxWidth: 320,
-            backgroundColor: isDark ? "#0D0D14" : "#FAF9F6",
-            backgroundImage: "none",
+            width: "75%",
+            maxWidth: 300,
+            backgroundColor: isDark ? "#0A1224" : "#FAF9F6",
             p: 3,
             display: "flex",
             flexDirection: "column",
@@ -304,64 +262,44 @@ export default function Navbar() {
         }}
       >
         <Box>
+          {/* Drawer Top */}
           <Box
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              mb: 4,
+              mb: 3.5,
+              pb: 2,
+              borderBottom: "1px solid",
+              borderColor: "divider",
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Box
-                sx={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: "8px",
-                  background: "linear-gradient(135deg, #292764 0%, #3e3b8a 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#FFFFFF",
-                  fontFamily: "var(--font-mono)",
-                  fontWeight: 700,
-                  fontSize: "0.78rem",
-                }}
-              >
-                {personalData.initials}
-              </Box>
-              <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                {personalData.name}
-              </Typography>
-            </Box>
+            <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+              {personalData.name}
+            </Typography>
             <IconButton onClick={handleDrawerToggle} size="small">
-              <X size={20} />
+              <X size={18} />
             </IconButton>
           </Box>
 
+          {/* Links List */}
           <List sx={{ p: 0 }}>
             {navItems.map((item) => (
-              <ListItem key={item.label} disablePadding sx={{ mb: 1 }}>
+              <ListItem key={item.label} disablePadding sx={{ mb: 0.75 }}>
                 <ListItemButton
                   onClick={() => handleNavClick(item.href)}
                   sx={{
-                    borderRadius: 2,
+                    borderRadius: 1.5,
                     py: 1,
-                    backgroundColor:
-                      activeSection === item.href.substring(1)
-                        ? isDark
-                          ? "rgba(133, 128, 255, 0.1)"
-                          : "rgba(41, 39, 100, 0.06)"
-                        : "transparent",
+                    px: 1.5,
                   }}
                 >
                   <ListItemText
                     primary={item.label}
                     primaryTypographyProps={{
-                      fontSize: "1rem",
-                      fontWeight: activeSection === item.href.substring(1) ? 700 : 500,
-                      color:
-                        activeSection === item.href.substring(1) ? "secondary.main" : "text.primary",
+                      fontSize: "0.95rem",
+                      fontWeight: 600,
+                      color: "text.primary",
                     }}
                   />
                 </ListItemButton>
@@ -370,30 +308,21 @@ export default function Navbar() {
           </List>
         </Box>
 
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, pt: 3 }}>
+        {/* Drawer Bottom CTA */}
+        <Box sx={{ pt: 3, borderTop: "1px solid", borderColor: "divider" }}>
           <Button
-            component="a"
-            href={personalData.resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="outlined"
-            fullWidth
-            startIcon={<Download size={16} />}
-          >
-            Download Resume
-          </Button>
-          <Button
-            component="a"
-            href="#contact"
-            onClick={() => handleNavClick("#contact")}
             variant="contained"
             fullWidth
-            endIcon={<Send size={16} />}
+            onClick={() => handleNavClick("#contact")}
+            endIcon={<ArrowUpRight size={16} />}
           >
             Let&apos;s Talk
           </Button>
         </Box>
       </Drawer>
+
+      {/* UK CV Preview Modal */}
+      <ResumeModal open={resumeModalOpen} onClose={() => setResumeModalOpen(false)} />
     </>
   );
 }

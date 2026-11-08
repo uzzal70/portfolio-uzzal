@@ -10,7 +10,7 @@ import "./globals.css";
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#FAF9F6" },
-    { media: "(prefers-color-scheme: dark)", color: "#0D0D14" },
+    { media: "(prefers-color-scheme: dark)", color: "#0A1224" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title: personalData.seo.title,
     description: personalData.seo.description,
     images: ["/og-image.svg"],
-    creator: "@uzzaldev",
+    creator: "@uzzal70",
   },
   robots: {
     index: true,

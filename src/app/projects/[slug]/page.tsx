@@ -6,7 +6,6 @@ import {
   Box,
   Typography,
   Button,
-  Grid,
   Card,
   CardContent,
   Divider,
@@ -21,7 +20,6 @@ import {
   Lightbulb,
   Cpu,
   Layers,
-  ShieldCheck,
 } from "lucide-react";
 import { projectsData } from "@/data/projects";
 import Navbar from "@/components/layout/Navbar";
@@ -57,7 +55,6 @@ export default function ProjectCaseStudyPage({
     notFound();
   }
 
-  // Find next project for bottom transition
   const currentIndex = projectsData.findIndex((p) => p.slug === project.slug);
   const nextProject = projectsData[(currentIndex + 1) % projectsData.length];
 
@@ -126,7 +123,7 @@ export default function ProjectCaseStudyPage({
             <Typography
               variant="h1"
               sx={{
-                fontSize: { xs: "2.5rem", sm: "3.2rem", md: "4rem" },
+                fontSize: { xs: "2.4rem", sm: "3.2rem", md: "3.8rem" },
                 fontWeight: 600,
                 color: "text.primary",
                 mb: 1.5,
@@ -138,10 +135,10 @@ export default function ProjectCaseStudyPage({
             <Typography
               variant="h4"
               sx={{
-                fontSize: { xs: "1.15rem", md: "1.45rem" },
+                fontSize: { xs: "1.1rem", md: "1.35rem" },
                 color: "secondary.main",
                 fontWeight: 500,
-                mb: 4,
+                mb: 3.5,
                 maxWidth: "850px",
               }}
             >
@@ -151,7 +148,7 @@ export default function ProjectCaseStudyPage({
             <Typography
               variant="body1"
               sx={{
-                fontSize: { xs: "1.05rem", md: "1.2rem" },
+                fontSize: { xs: "1.02rem", md: "1.15rem" },
                 lineHeight: 1.8,
                 color: "text.secondary",
                 maxWidth: "900px",
@@ -189,201 +186,322 @@ export default function ProjectCaseStudyPage({
                 </Button>
               )}
             </Box>
+
+            {/* Interactive Project Screenshot / Browser Window Showcase */}
+            {project.previewImage && (
+              <Box
+                sx={{
+                  mt: 5,
+                  borderRadius: 3,
+                  overflow: "hidden",
+                  border: "1px solid",
+                  borderColor: "divider",
+                  backgroundColor: "background.paper",
+                  boxShadow: "0 25px 60px -15px rgba(0, 0, 0, 0.45)",
+                }}
+              >
+                {/* Browser Window Header Chrome */}
+                <Box
+                  sx={{
+                    px: 2.5,
+                    py: 1.5,
+                    backgroundColor: "rgba(0, 0, 0, 0.06)",
+                    borderBottom: "1px solid",
+                    borderColor: "divider",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 2,
+                  }}
+                >
+                  {/* Traffic light dots */}
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Box sx={{ width: 11, height: 11, borderRadius: "50%", backgroundColor: "#FF5F56" }} />
+                    <Box sx={{ width: 11, height: 11, borderRadius: "50%", backgroundColor: "#FFBD2E" }} />
+                    <Box sx={{ width: 11, height: 11, borderRadius: "50%", backgroundColor: "#27C93F" }} />
+                  </Box>
+
+                  {/* URL Address Bar */}
+                  <Box
+                    sx={{
+                      flex: 1,
+                      maxWidth: "520px",
+                      px: 2.5,
+                      py: 0.5,
+                      borderRadius: 2,
+                      backgroundColor: "rgba(255, 255, 255, 0.06)",
+                      border: "1px solid",
+                      borderColor: "divider",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.78rem",
+                      color: "text.secondary",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <span style={{ color: "#22C55E" }}>🔒</span>
+                    <span>{project.liveDemoUrl || `https://${project.slug}.internal.dev`}</span>
+                  </Box>
+
+                  {/* Status Pill */}
+                  <Box
+                    sx={{
+                      px: 1.2,
+                      py: 0.35,
+                      borderRadius: 1,
+                      backgroundColor: "rgba(34, 197, 94, 0.15)",
+                      color: "#22C55E",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.7rem",
+                      fontWeight: 700,
+                      letterSpacing: "0.06em",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {project.status.toUpperCase()}
+                  </Box>
+                </Box>
+
+                {/* Screenshot Image Container */}
+                <Box
+                  sx={{
+                    position: "relative",
+                    width: "100%",
+                    backgroundColor: "#0A1224",
+                    lineHeight: 0,
+                    overflow: "hidden",
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={project.previewImage}
+                    alt={`${project.title} Interface Screenshot`}
+                    sx={{
+                      width: "100%",
+                      height: "auto",
+                      maxHeight: { xs: "360px", sm: "540px", md: "700px" },
+                      objectFit: "cover",
+                      objectPosition: "top",
+                      display: "block",
+                    }}
+                  />
+                </Box>
+              </Box>
+            )}
           </Box>
 
           <Divider sx={{ my: 6 }} />
 
           {/* Problem & Solution Grid */}
-          <Grid container spacing={4} sx={{ mb: 7 }}>
-            <Grid item xs={12} md={6}>
-              <Card sx={{ height: "100%", p: 2 }}>
-                <CardContent>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}>
-                    <AlertTriangle size={22} color="#F59E0B" />
-                    <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                      The Problem Statement
-                    </Typography>
-                  </Box>
-                  <Typography
-                    variant="body1"
-                    sx={{ color: "text.secondary", lineHeight: 1.8, fontSize: "1rem" }}
-                  >
-                    {project.problemStatement}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+              gap: 3,
+              mb: 7,
+            }}
+          >
+            <Card sx={{ p: 2, height: "100%" }}>
+              <CardContent>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}>
+                  <AlertTriangle size={22} color="#F59E0B" />
+                  <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                    The Problem Statement
                   </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
+                </Box>
+                <Typography
+                  variant="body1"
+                  sx={{ color: "text.secondary", lineHeight: 1.8, fontSize: "1rem" }}
+                >
+                  {project.problemStatement}
+                </Typography>
+              </CardContent>
+            </Card>
 
-            <Grid item xs={12} md={6}>
-              <Card sx={{ height: "100%", p: 2 }}>
-                <CardContent>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}>
-                    <Lightbulb size={22} color="#22C55E" />
-                    <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                      The Technical Solution
-                    </Typography>
-                  </Box>
-                  <Typography
-                    variant="body1"
-                    sx={{ color: "text.secondary", lineHeight: 1.8, fontSize: "1rem" }}
-                  >
-                    {project.technicalSolution}
+            <Card sx={{ p: 2, height: "100%" }}>
+              <CardContent>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}>
+                  <Lightbulb size={22} color="#22C55E" />
+                  <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                    The Technical Solution
                   </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+                </Box>
+                <Typography
+                  variant="body1"
+                  sx={{ color: "text.secondary", lineHeight: 1.8, fontSize: "1rem" }}
+                >
+                  {project.technicalSolution}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Box>
 
           {/* Key Responsibilities */}
           <Box sx={{ mb: 7 }}>
             <Typography variant="h4" sx={{ fontWeight: 700, mb: 3 }}>
               My Core Engineering Responsibilities
             </Typography>
-            <Grid container spacing={2}>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+                gap: 2,
+              }}
+            >
               {project.responsibilities.map((resp, i) => (
-                <Grid item xs={12} md={6} key={i}>
+                <Box
+                  key={i}
+                  sx={{
+                    p: 2.5,
+                    borderRadius: 2,
+                    backgroundColor: "background.paper",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 1.5,
+                  }}
+                >
+                  <CheckCircle2
+                    size={18}
+                    color="#B89555"
+                    style={{ marginTop: "3px", flexShrink: 0 }}
+                  />
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "text.primary", lineHeight: 1.6, fontSize: "0.92rem" }}
+                  >
+                    {resp}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+          </Box>
+
+          {/* Architecture Decisions & Key Challenges */}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", lg: "1fr 1fr" },
+              gap: 4,
+              mb: 7,
+            }}
+          >
+            <Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
+                <Layers size={22} color="#B89555" />
+                <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                  Architecture Decisions
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                {project.architectureDecisions.map((dec, i) => (
                   <Box
+                    key={i}
                     sx={{
                       p: 2.5,
                       borderRadius: 2,
                       backgroundColor: "background.paper",
                       border: "1px solid",
                       borderColor: "divider",
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 1.5,
-                      height: "100%",
                     }}
                   >
-                    <CheckCircle2
-                      size={18}
-                      color="#B89555"
-                      style={{ marginTop: "3px", flexShrink: 0 }}
-                    />
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        fontFamily: "var(--font-mono)",
+                        color: "secondary.main",
+                        fontWeight: 700,
+                        display: "block",
+                        mb: 0.5,
+                      }}
+                    >
+                      DECISION 0{i + 1}
+                    </Typography>
                     <Typography
                       variant="body2"
-                      sx={{ color: "text.primary", lineHeight: 1.6, fontSize: "0.92rem" }}
+                      sx={{ color: "text.secondary", lineHeight: 1.65 }}
                     >
-                      {resp}
+                      {dec}
                     </Typography>
                   </Box>
-                </Grid>
-              ))}
-            </Grid>
+                ))}
+              </Box>
+            </Box>
+
+            <Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
+                <Cpu size={22} color="#9490FF" />
+                <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                  Challenges & Engineering Solutions
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+                {project.challengesSolved.map((cs, i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      p: 3,
+                      borderRadius: 2,
+                      backgroundColor: "background.paper",
+                      border: "1px solid",
+                      borderColor: "divider",
+                    }}
+                  >
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}
+                    >
+                      Challenge: {cs.challenge}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary", lineHeight: 1.7 }}
+                    >
+                      <strong>Solution:</strong> {cs.solution}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
           </Box>
 
-          {/* Architecture Decisions & Key Challenges */}
-          <Grid container spacing={4} sx={{ mb: 7 }}>
-            <Grid item xs={12} lg={6}>
-              <Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
-                  <Layers size={22} color="#B89555" />
-                  <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                    Architecture Decisions
-                  </Typography>
-                </Box>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  {project.architectureDecisions.map((dec, i) => (
-                    <Box
-                      key={i}
-                      sx={{
-                        p: 2.5,
-                        borderRadius: 2,
-                        backgroundColor: "background.paper",
-                        border: "1px solid",
-                        borderColor: "divider",
-                      }}
-                    >
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          fontFamily: "var(--font-mono)",
-                          color: "secondary.main",
-                          fontWeight: 700,
-                          display: "block",
-                          mb: 0.5,
-                        }}
-                      >
-                        DECISION 0{i + 1}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "text.secondary", lineHeight: 1.65 }}
-                      >
-                        {dec}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} lg={6}>
-              <Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 3 }}>
-                  <Cpu size={22} color="#8580FF" />
-                  <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                    Challenges & Engineering Solutions
-                  </Typography>
-                </Box>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
-                  {project.challengesSolved.map((cs, i) => (
-                    <Box
-                      key={i}
-                      sx={{
-                        p: 3,
-                        borderRadius: 2,
-                        backgroundColor: "background.paper",
-                        border: "1px solid",
-                        borderColor: "divider",
-                      }}
-                    >
-                      <Typography
-                        variant="subtitle2"
-                        sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}
-                      >
-                        Challenge: {cs.challenge}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "text.secondary", lineHeight: 1.7 }}
-                      >
-                        <strong>Solution:</strong> {cs.solution}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
-
           {/* Key Features Breakdown */}
-          <Box sx={{ mb: 8 }}>
+          <Box sx={{ mb: 7 }}>
             <Typography variant="h4" sx={{ fontWeight: 700, mb: 3 }}>
               Key Features & Implementation Scope
             </Typography>
-            <Grid container spacing={3}>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "repeat(3, 1fr)" },
+                gap: 2.5,
+              }}
+            >
               {project.keyFeatures.map((kf, i) => (
-                <Grid item xs={12} sm={6} md={4} key={i}>
-                  <Card sx={{ height: "100%", p: 2 }}>
-                    <CardContent>
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}
-                      >
-                        {kf.title}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "text.secondary", lineHeight: 1.6 }}
-                      >
-                        {kf.description}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                <Card key={i} sx={{ height: "100%", p: 1.5 }}>
+                  <CardContent>
+                    <Typography
+                      variant="subtitle1"
+                      sx={{ fontWeight: 700, color: "text.primary", mb: 1 }}
+                    >
+                      {kf.title}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary", lineHeight: 1.6 }}
+                    >
+                      {kf.description}
+                    </Typography>
+                  </CardContent>
+                </Card>
               ))}
-            </Grid>
+            </Box>
           </Box>
 
           {/* Technologies Stack */}
@@ -406,7 +524,7 @@ export default function ProjectCaseStudyPage({
                   key={t}
                   sx={{
                     px: 2,
-                    py: 1,
+                    py: 0.9,
                     borderRadius: 2,
                     backgroundColor: "background.paper",
                     border: "1px solid",

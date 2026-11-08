@@ -3,90 +3,446 @@
 << /Type /Catalog /Pages 2 0 R >>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+<< /Type /Pages /Kids [3 0 R 4 0 R] /Count 2 >>
 endobj
 3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 5 0 R /Resources << /Font << /F1 7 0 R /F2 8 0 R >> >> >>
 endobj
 4 0 obj
-<< /Length 1350 >>
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 6 0 R /Resources << /Font << /F1 7 0 R /F2 8 0 R >> >> >>
+endobj
+5 0 obj
+<< /Length 5710 >>
 stream
 BT
-/F2 20 Tf
-50 740 Td
-(UZZAL HOSSAIN - SENIOR FRONTEND-FOCUSED FULL-STACK DEVELOPER) Tj
-/F1 10 Tf
-0 -18 Td
-(Dhaka, Bangladesh | contact@uzzal.dev | github.com/uzzaldev | linkedin.com/in/uzzaldev) Tj
-0 -25 Td
-/F2 13 Tf
+/F2 19 Tf
+45 798 Td
+(UZZAL HOSSAIN) Tj
+ET
+BT
+/F2 10 Tf
+45 781 Td
+(SENIOR FRONTEND-FOCUSED FULL-STACK DEVELOPER) Tj
+ET
+BT
+/F1 8.5 Tf
+45 766 Td
+(Dhaka, Bangladesh | uzzalcse70@gmail.com | linkedin.com/in/uzzal70 | github.com/uzzal70) Tj
+ET
+0.7 g
+45 756 505 0.5 re f
+0 g
+BT
+/F2 10.5 Tf
+45 738 Td
 (PROFESSIONAL SUMMARY) Tj
-/F1 10 Tf
-0 -15 Td
-(Frontend-focused Full-Stack Developer with 3-5 years experience engineering scalable enterprise) Tj
-0 -13 Td
-(web applications, B2B multi-brand portals, and client-side document processing architectures.) Tj
-0 -13 Td
-(Strong mastery in React.js, Next.js, TypeScript, and Material UI v5, with practical backend knowledge) Tj
-0 -13 Td
-(in Node.js, NestJS, REST APIs, and PostgreSQL.) Tj
-0 -25 Td
-/F2 13 Tf
-(CORE TECHNICAL EXPERTISE) Tj
-/F1 10 Tf
-0 -15 Td
-(Frontend: React.js, Next.js, TypeScript, JavaScript (ES6+), Material UI v5, Redux Toolkit, Framer Motion) Tj
-0 -13 Td
-(Backend: Node.js, NestJS, Express.js, REST API Development, JWT Auth, RBAC, Error Handling) Tj
-0 -13 Td
-(Database & Tools: PostgreSQL, SQL, Git, GitHub, Docker Fundamentals, Postman, Vite, Sentry, Figma) Tj
-0 -25 Td
-/F2 13 Tf
+ET
+BT
+/F1 8.5 Tf
+45 724 Td
+(Senior Frontend-Focused Full-Stack Developer with 5+ years of commercial experience architecting resilient,) Tj
+ET
+BT
+/F1 8.5 Tf
+45 712 Td
+(user-centric enterprise web applications, high-concurrency B2B travel portals, and client-side document processing) Tj
+ET
+BT
+/F1 8.5 Tf
+45 700 Td
+(engines. Specialised in modern React 18, Next.js App Router, TypeScript, Material UI v5, and Redux Toolkit,) Tj
+ET
+BT
+/F1 8.5 Tf
+45 688 Td
+(complemented by practical full-stack working knowledge of Node.js, NestJS REST APIs, and PostgreSQL.) Tj
+ET
+BT
+/F2 10.5 Tf
+45 668 Td
+(CORE TECHNICAL SKILLS) Tj
+ET
+BT
+/F2 8.5 Tf
+45 654 Td
+(Frontend Architecture: ) Tj
+ET
+BT
+/F1 8.5 Tf
+145 654 Td
+(React.js \(18+\), Next.js \(App Router\), TypeScript, JavaScript \(ES6+\), HTML5, CSS3, Material UI v5) Tj
+ET
+BT
+/F2 8.5 Tf
+45 642 Td
+(State & API Integration: ) Tj
+ET
+BT
+/F1 8.5 Tf
+145 642 Td
+(Redux Toolkit, RTK Query, React Context, Custom Hooks, Axios Interceptors, REST APIs, Formik, Yup) Tj
+ET
+BT
+/F2 8.5 Tf
+45 630 Td
+(Backend & Database: ) Tj
+ET
+BT
+/F1 8.5 Tf
+145 630 Td
+(Node.js, NestJS Modules, Express.js, PostgreSQL, JWT Authentication & Refresh Tokens, RBAC Guards) Tj
+ET
+BT
+/F2 8.5 Tf
+45 618 Td
+(Performance & Document: ) Tj
+ET
+BT
+/F1 8.5 Tf
+145 618 Td
+(Tesseract.js OCR, Web Workers, Canvas Image Processing, @react-pdf/renderer, Vite, Git, Postman) Tj
+ET
+BT
+/F2 10.5 Tf
+45 598 Td
 (PROFESSIONAL EXPERIENCE) Tj
-/F2 11 Tf
-0 -16 Td
-(Senior Frontend Developer | Travel Tech Innovations Ltd. | 2023 - Present) Tj
-/F1 10 Tf
-0 -13 Td
-(- Architected multi-brand frontend architecture powering B2B travel portals (TripFindy, Ticket Lagbe).) Tj
-0 -13 Td
-(- Reduced high-volume itinerary filter re-renders by 60% through normalized Redux and memoization.) Tj
-0 -13 Td
-(- Built client-side vector PDF flight ticket and invoice generation using @react-pdf/renderer.) Tj
-0 -18 Td
-/F2 11 Tf
-(Frontend Software Engineer | Enterprise Solutions & Softwares | 2021 - 2023) Tj
-/F1 10 Tf
-0 -13 Td
-(- Engineered role-based administration dashboards and regulatory trade license verification modules.) Tj
-0 -13 Td
-(- Connected frontend views with Node.js/Express REST APIs and handled JWT token refresh flows.) Tj
-0 -25 Td
-/F2 13 Tf
-(EDUCATION) Tj
-/F1 10 Tf
-0 -15 Td
-(B.Sc. in Computer Science & Engineering | Daffodil International University | 2017 - 2021) Tj
+ET
+BT
+/F2 9.5 Tf
+45 582 Td
+(Senior Frontend Developer | Travel Tech Innovations Ltd.) Tj
+ET
+BT
+/F1 8.5 Tf
+440 582 Td
+(2023 - Present) Tj
+ET
+BT
+/F1 8 Tf
+45 570 Td
+(Dhaka, Bangladesh \(Hybrid\) -- Leading frontend architecture for flagship B2B platforms: TripFindy & Ticket Lagbe) Tj
+ET
+BT
+/F1 8.2 Tf
+55 556 Td
+(- Architected scalable multi-tenant React/Next.js frontend supporting white-label agency branding and custom commission rules.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 544 Td
+(- Optimized high-concurrency flight search filters on 800+ multi-leg itineraries, cutting UI filter response from 350ms to <16ms.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 532 Td
+(- Built client-side vector airline e-ticket and invoice generator using @react-pdf, eliminating server rendering bottlenecks.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 520 Td
+(- Standardised atomic component library with Material UI v5 & TypeScript, establishing design tokens and WCAG AA compliance.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 508 Td
+(- Collaborated closely with backend engineers on NestJS REST API schemas for live GDS seat availability and PNR issuance.) Tj
+ET
+BT
+/F2 9.5 Tf
+45 488 Td
+(Frontend Software Engineer | Enterprise Solutions & Softwares) Tj
+ET
+BT
+/F1 8.5 Tf
+440 488 Td
+(2021 - 2023) Tj
+ET
+BT
+/F1 8 Tf
+45 476 Td
+(Dhaka, Bangladesh -- High-performance enterprise portals, administrative dashboards, and document workflows) Tj
+ET
+BT
+/F1 8.2 Tf
+55 462 Td
+(- Developed scalable single-page web applications and internal administrative dashboards using React.js and modern CSS.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 450 Td
+(- Built complex form validation workflows and document preview modules for regulatory agency trade license verifications.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 438 Td
+(- Connected frontend clients to Node.js/Express REST APIs, integrating JWT authentication and refresh token rotation.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 426 Td
+(- Authored reusable data table components supporting server-side sorting, column visibility toggles, and CSV transaction exports.) Tj
+ET
+BT
+/F2 9.5 Tf
+45 406 Td
+(Junior Web Developer | Digital Code Craft) Tj
+ET
+BT
+/F1 8.5 Tf
+440 406 Td
+(2020 - 2021) Tj
+ET
+BT
+/F1 8 Tf
+45 394 Td
+(Dhaka, Bangladesh -- Responsive web applications and frontend feature delivery) Tj
+ET
+BT
+/F1 8.2 Tf
+55 380 Td
+(- Translated designer Figma mockups into pixel-accurate HTML5, CSS3, and modern JavaScript components.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 368 Td
+(- Implemented client-side form validations, modal systems, and responsive layouts across cross-browser environments.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 356 Td
+(- Delivered 10+ responsive business web portals on schedule, maintaining clean code quality and mobile responsiveness.) Tj
+ET
+BT
+/F2 10.5 Tf
+45 334 Td
+(KEY PRODUCTION PLATFORMS & CASE STUDIES) Tj
+ET
+BT
+/F2 9 Tf
+45 318 Td
+(TripFindy \(B2B & B2C\) -- Multi-Brand Global Travel Management Platform) Tj
+ET
+BT
+/F1 8 Tf
+45 306 Td
+(Stack: React 18, Next.js, TypeScript, Redux Toolkit, Material UI v5, REST APIs | Live: b2b.tripfindy.com) Tj
+ET
+BT
+/F1 8.2 Tf
+55 294 Td
+(- Architected multi-tenant theming engine switching color palettes, logos, and commission rules with 0ms lag.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 282 Td
+(- Normalized flight search state tree in Redux Toolkit, ensuring smooth scrolling across hundreds of itineraries.) Tj
+ET
+BT
+/F2 9 Tf
+45 262 Td
+(Ticket Lagbe -- High-Throughput Travel Agency B2B Booking Engine) Tj
+ET
+BT
+/F1 8 Tf
+45 250 Td
+(Stack: React.js, Material UI v5, Redux Toolkit, REST APIs | Live: ticketlagbe.com) Tj
+ET
+BT
+/F1 8.2 Tf
+55 238 Td
+(- Built streamlined agent booking flows, wallet balance tracking, and instant airline PNR retrieval.) Tj
+ET
+BT
+/F2 9 Tf
+45 218 Td
+(Hotel Lagbe -- B2B & B2C Hotel Reservation & Room Allocation Engine) Tj
+ET
+BT
+/F1 8 Tf
+45 206 Td
+(Stack: React 18, TypeScript, Material UI v5, Redux Toolkit, Date-fns | Live: hotellagbe.com) Tj
+ET
+BT
+/F1 8.2 Tf
+55 194 Td
+(- Developed faceted hotel search, dynamic room pricing calendar, and client-side voucher issuance.) Tj
+ET
+BT
+/F1 8 Tf
+260 40 Td
+(Page 1 of 2) Tj
 ET
 endstream
 endobj
-5 0 obj
+6 0 obj
+<< /Length 3437 >>
+stream
+BT
+/F2 10.5 Tf
+45 798 Td
+(KEY PRODUCTION PLATFORMS \(CONTINUED\)) Tj
+ET
+BT
+/F2 9 Tf
+45 780 Td
+(GotiMail -- Enterprise Email Workspace & Transactional API Infrastructure) Tj
+ET
+BT
+/F1 8 Tf
+45 768 Td
+(Stack: React 18, Next.js App Router, TypeScript, Redux Toolkit, Amazon SES API, WebSockets | Live: gotimail.com) Tj
+ET
+BT
+/F1 8.2 Tf
+55 756 Td
+(- Built automated DNS verification wizard, bulk campaign drag-and-drop builder, and transactional SMTP relay console.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 744 Td
+(- Engineered Web Worker CSV file processor validating and scrubbing 100,000+ subscriber lists with zero UI lag.) Tj
+ET
+BT
+/F2 9 Tf
+45 724 Td
+(GotiSMS -- Enterprise CPaaS Bulk SMS Gateway & OTP Infrastructure) Tj
+ET
+BT
+/F1 8 Tf
+45 712 Td
+(Stack: React.js, TypeScript, Material UI v5, Redux Toolkit, bKash Gateway, Socket.io | Live: gotisms.com) Tj
+ET
+BT
+/F1 8.2 Tf
+55 700 Td
+(- Developed carrier-grade masking composer with dynamic GSM-7/UCS-2 Unicode byte analysis and sub-second OTP routing.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 688 Td
+(- Built developer API playground with interactive code generation, IP allowlisting, and exportable DLR reports.) Tj
+ET
+BT
+/F2 9 Tf
+45 668 Td
+(Safety GPS Tracker -- Real-Time IoT Fleet Telematics Platform) Tj
+ET
+BT
+/F1 8 Tf
+45 656 Td
+(Stack: React 18, TypeScript, Leaflet / Mapbox GL, Material UI v5, WebSockets | Live: safetygpstracker.com.bd) Tj
+ET
+BT
+/F1 8.2 Tf
+55 644 Td
+(- Constructed interactive live satellite map tracking vehicles with sub-5 second GPS coordinate streams and remote engine kill.) Tj
+ET
+BT
+/F1 8.2 Tf
+55 632 Td
+(- Built trip history route replay scrubber, polygon geofence breach triggers, and fleet diagnostic telemetry.) Tj
+ET
+BT
+/F2 9 Tf
+45 612 Td
+(AuditNext -- Digital Compliance Management & Corporate Regulatory Audit Platform) Tj
+ET
+BT
+/F1 8 Tf
+45 600 Td
+(Stack: React 18, Next.js, TypeScript, Material UI v5, Formik, Yup, REST APIs | Live: auditnext.com.bd) Tj
+ET
+BT
+/F1 8.2 Tf
+55 588 Td
+(- Engineered clause-by-clause ISO certification compliance matrix, document evidence vault, and milestone audit tracker.) Tj
+ET
+BT
+/F2 9 Tf
+45 568 Td
+(Aero Bangladesh & Impressive Group -- Corporate Aviation & Enterprise Tech Portal) Tj
+ET
+BT
+/F1 8 Tf
+45 556 Td
+(Stack: React 18, Next.js App Router, TypeScript, Framer Motion, CSS Variables | Live: aero.com.bd & impressivebd.com) Tj
+ET
+BT
+/F1 8.2 Tf
+55 544 Td
+(- Delivered luxury aviation charter quotation engine and multi-sector corporate conglomerate digital discovery portal.) Tj
+ET
+BT
+/F2 10.5 Tf
+45 518 Td
+(EDUCATION) Tj
+ET
+BT
+/F2 9.5 Tf
+45 504 Td
+(Bachelor of Science in Computer Science & Engineering \(B.Sc. in CSE\)) Tj
+ET
+BT
+/F1 8.5 Tf
+45 492 Td
+(Daffodil International University, Dhaka, Bangladesh -- 2017 to 2021) Tj
+ET
+BT
+/F1 8 Tf
+45 480 Td
+(Core Studies: Data Structures, Algorithms, Software Engineering, Database Systems, Computer Networks.) Tj
+ET
+BT
+/F2 10.5 Tf
+45 454 Td
+(AVAILABILITY & WORK PREFERENCES) Tj
+ET
+BT
+/F1 8.5 Tf
+45 438 Td
+(- Location: Dhaka, Bangladesh \(UTC+6\)) Tj
+ET
+BT
+/F1 8.5 Tf
+45 426 Td
+(- Availability: Full-Time Senior / Lead Frontend & Full-Stack roles \(Worldwide Remote, Hybrid, or Contract\)) Tj
+ET
+BT
+/F1 8.5 Tf
+45 414 Td
+(- Languages: English \(Professional Working Proficiency\), Bengali \(Native\)) Tj
+ET
+BT
+/F1 8.5 Tf
+45 402 Td
+(- Portfolio & Code: https://uzzal.dev | GitHub: https://github.com/uzzal70 | LinkedIn: https://linkedin.com/in/uzzal70) Tj
+ET
+BT
+/F1 8 Tf
+260 40 Td
+(Page 2 of 2) Tj
+ET
+endstream
+endobj
+7 0 obj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
-6 0 obj
+8 0 obj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
 endobj
 xref
-0 7
+0 9
 0000000000 65535 f 
 0000000009 00000 n 
 0000000058 00000 n 
-0000000115 00000 n 
-0000000244 00000 n 
-0000001648 00000 n 
-0000001719 00000 n 
+0000000121 00000 n 
+0000000263 00000 n 
+0000000405 00000 n 
+0000006166 00000 n 
+0000009654 00000 n 
+0000009724 00000 n 
 trailer
-<< /Size 7 /Root 1 0 R >>
+<< /Size 9 /Root 1 0 R >>
 startxref
-1795
+9799
 %%EOF

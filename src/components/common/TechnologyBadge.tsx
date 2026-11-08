@@ -110,3 +110,4 @@ export default function TechnologyBadge({ tech }: TechnologyBadgeProps) {
     </Box>
   );
 }
+

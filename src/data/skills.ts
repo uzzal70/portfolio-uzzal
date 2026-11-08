@@ -56,3 +56,4 @@ export const technologies: Technology[] = [
   { name: "Sentry", category: "tools", level: "Working Knowledge", description: "Error tracking, source maps, performance monitoring, release tracking" },
   { name: "Figma", category: "tools", level: "Working Knowledge", description: "Design handoff, auto-layout inspection, design token extraction" },
 ];
+

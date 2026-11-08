@@ -73,26 +73,26 @@ export const getAppTheme = (mode: "light" | "dark") => {
     palette: {
       mode,
       primary: {
-        main: isLight ? "#292764" : "#8580FF",
-        light: isLight ? "#3E3B8A" : "#A5A2FF",
-        dark: isLight ? "#1B1945" : "#5853C9",
+        main: isLight ? "#292764" : "#858FFF",
+        light: isLight ? "#3E3B8A" : "#A5AFFF",
+        dark: isLight ? "#1B1945" : "#5B65E6",
         contrastText: "#FFFFFF",
       },
       secondary: {
-        main: isLight ? "#B89555" : "#CBB075",
-        light: isLight ? "#CFAE70" : "#DFC794",
-        dark: isLight ? "#96753A" : "#A78B4E",
-        contrastText: isLight ? "#FFFFFF" : "#111118",
+        main: isLight ? "#B89555" : "#D4BA82",
+        light: isLight ? "#CFAE70" : "#E5D0A4",
+        dark: isLight ? "#96753A" : "#B39659",
+        contrastText: isLight ? "#FFFFFF" : "#0A1224",
       },
       background: {
-        default: isLight ? "#FAF9F6" : "#0D0D14",
-        paper: isLight ? "#FFFFFF" : "#141420",
+        default: isLight ? "#FAF9F6" : "#0A1224",
+        paper: isLight ? "#FFFFFF" : "#101C35",
       },
       text: {
-        primary: isLight ? "#202124" : "#F5F5F7",
-        secondary: isLight ? "#777777" : "#A2A2B8",
+        primary: isLight ? "#202124" : "#F7F7FA",
+        secondary: isLight ? "#5F6368" : "#9C9CB2",
       },
-      divider: isLight ? "#EAE8E2" : "#232336",
+      divider: isLight ? "#E8E5DD" : "rgba(255, 255, 255, 0.12)",
     },
     typography: baseTypography,
     shape: {
@@ -102,7 +102,23 @@ export const getAppTheme = (mode: "light" | "dark") => {
       MuiCssBaseline: {
         styleOverrides: {
           body: {
-            scrollbarColor: isLight ? "#D6D2C4 #FAF9F6" : "#32324C #0D0D14",
+            scrollbarColor: isLight ? "#D5D1C5 #FAF9F6" : "#303048 #0A1224",
+          },
+        },
+      },
+      MuiContainer: {
+        styleOverrides: {
+          root: {
+            paddingLeft: "24px",
+            paddingRight: "24px",
+            "@media (min-width: 600px)": {
+              paddingLeft: "32px",
+              paddingRight: "32px",
+            },
+            "@media (min-width: 1200px)": {
+              paddingLeft: "40px",
+              paddingRight: "40px",
+            },
           },
         },
       },
@@ -110,7 +126,7 @@ export const getAppTheme = (mode: "light" | "dark") => {
         styleOverrides: {
           root: {
             borderRadius: 8,
-            padding: "10px 22px",
+            padding: "10px 24px",
             fontSize: "0.92rem",
             boxShadow: "none",
             transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
@@ -120,18 +136,18 @@ export const getAppTheme = (mode: "light" | "dark") => {
             },
           },
           containedPrimary: {
-            backgroundColor: isLight ? "#292764" : "#8580FF",
+            backgroundColor: isLight ? "#292764" : "#9490FF",
             color: "#FFFFFF",
             "&:hover": {
-              backgroundColor: isLight ? "#1E1C4D" : "#726CE8",
+              backgroundColor: isLight ? "#1E1C4D" : "#7E7AE6",
             },
           },
           outlined: {
-            borderColor: isLight ? "#EAE8E2" : "#2E2E42",
-            color: isLight ? "#202124" : "#F5F5F7",
+            borderColor: isLight ? "#E8E5DD" : "#2A2A40",
+            color: isLight ? "#202124" : "#F7F7FA",
             "&:hover": {
-              borderColor: isLight ? "#B89555" : "#CBB075",
-              backgroundColor: isLight ? "rgba(184, 149, 85, 0.05)" : "rgba(203, 176, 117, 0.08)",
+              borderColor: isLight ? "#B89555" : "#D4BA82",
+              backgroundColor: isLight ? "rgba(184, 149, 85, 0.05)" : "rgba(212, 186, 130, 0.08)",
             },
           },
         },
@@ -139,9 +155,9 @@ export const getAppTheme = (mode: "light" | "dark") => {
       MuiCard: {
         styleOverrides: {
           root: {
-            borderRadius: 12,
-            border: `1px solid ${isLight ? "#EAE8E2" : "#232336"}`,
-            backgroundColor: isLight ? "#FFFFFF" : "#141420",
+            borderRadius: 14,
+            border: `1px solid ${isLight ? "#E8E5DD" : "rgba(255, 255, 255, 0.12)"}`,
+            backgroundColor: isLight ? "#FFFFFF" : "#101C35",
             boxShadow: isLight
               ? "0 4px 20px -2px rgba(41, 39, 100, 0.04)"
               : "0 4px 24px -2px rgba(0, 0, 0, 0.4)",
@@ -163,15 +179,15 @@ export const getAppTheme = (mode: "light" | "dark") => {
           root: {
             "& .MuiOutlinedInput-root": {
               borderRadius: 8,
-              backgroundColor: isLight ? "#FFFFFF" : "#1A1A28",
+              backgroundColor: isLight ? "#FFFFFF" : "#181826",
               "& fieldset": {
-                borderColor: isLight ? "#EAE8E2" : "#2A2A3E",
+                borderColor: isLight ? "#E8E5DD" : "#28283C",
               },
               "&:hover fieldset": {
-                borderColor: isLight ? "#B89555" : "#CBB075",
+                borderColor: isLight ? "#B89555" : "#D4BA82",
               },
               "&.Mui-focused fieldset": {
-                borderColor: isLight ? "#292764" : "#8580FF",
+                borderColor: isLight ? "#292764" : "#9490FF",
                 borderWidth: "1.5px",
               },
             },

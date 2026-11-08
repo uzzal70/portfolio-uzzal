@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { Box, Container, Typography, Card, CardContent, Grid } from "@mui/material";
+import { Box, Container, Typography, Card } from "@mui/material";
 import { motion } from "framer-motion";
-import { Briefcase, Calendar, MapPin, CheckCircle2, Award } from "lucide-react";
+import { Calendar, MapPin } from "lucide-react";
 import SectionHeading from "../common/SectionHeading";
 import { experienceData } from "@/data/experience";
 import { useAppTheme } from "@/theme/ThemeContext";
@@ -18,89 +18,87 @@ export default function Experience() {
       id="experience"
       component="section"
       sx={{
-        py: { xs: 10, md: 14 },
+        py: { xs: 9, md: 13 },
         position: "relative",
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <SectionHeading
-          badge="CAREER TRAJECTORY"
-          title="Professional Experience"
-          subtitle="Progressive ownership across enterprise B2B travel portals, responsive web platforms, and client-side document automation."
+          badge="CAREER MILESTONES"
+          title="Commercial Experience & Roles"
+          subtitle="Chronological track record architecting enterprise frontend applications and high-frequency travel booking portals."
         />
 
-        {/* Timeline Container */}
+        {/* Compact Vertical Timeline */}
         <Box
           sx={{
             position: "relative",
-            maxWidth: "1000px",
+            maxWidth: "920px",
             mx: "auto",
-            pl: { xs: 3, md: 6 },
+            pl: { xs: 3, md: 4.5 },
             "&::before": {
               content: '""',
               position: "absolute",
-              top: 0,
-              bottom: 0,
-              left: { xs: 8, md: 18 },
+              top: 12,
+              bottom: 12,
+              left: { xs: 6, md: 10 },
               width: "2px",
               background: isDark
-                ? "linear-gradient(180deg, #8580FF 0%, #B89555 50%, #232336 100%)"
-                : "linear-gradient(180deg, #292764 0%, #B89555 50%, #EAE8E2 100%)",
+                ? "linear-gradient(180deg, #9490FF 0%, #B89555 60%, #242436 100%)"
+                : "linear-gradient(180deg, #292764 0%, #B89555 60%, #E8E5DD 100%)",
             },
           }}
         >
-          {experienceData.map((exp, index) => (
+          {experienceData.map((exp) => (
             <Box
               key={exp.id}
               component={motion.div}
               variants={fadeInUp}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: true, amount: 0.15 }}
               sx={{
                 position: "relative",
-                mb: { xs: 6, md: 8 },
+                mb: { xs: 4.5, md: 6 },
+                "&:last-child": { mb: 0 },
               }}
             >
               {/* Timeline Indicator Dot */}
               <Box
                 sx={{
                   position: "absolute",
-                  left: { xs: -28, md: -48 },
-                  top: 8,
-                  width: { xs: 14, md: 18 },
-                  height: { xs: 14, md: 18 },
+                  left: { xs: -24, md: -34 },
+                  top: 22,
+                  width: { xs: 13, md: 15 },
+                  height: { xs: 13, md: 15 },
                   borderRadius: "50%",
                   backgroundColor: exp.isCurrent ? "secondary.main" : "background.paper",
-                  border: "3px solid",
+                  border: "2.5px solid",
                   borderColor: exp.isCurrent
                     ? "secondary.main"
                     : isDark
-                    ? "#8580FF"
+                    ? "#9490FF"
                     : "primary.main",
-                  boxShadow: exp.isCurrent ? "0 0 12px #B89555" : "none",
+                  boxShadow: exp.isCurrent ? "0 0 10px #B89555" : "none",
                   zIndex: 2,
                 }}
               />
 
-              {/* Experience Card */}
+              {/* Compact Experience Card */}
               <Card
                 sx={{
-                  p: { xs: 2.5, md: 4 },
+                  p: { xs: 2.5, md: 3.5 },
                   borderRadius: 3,
-                  backgroundColor: isDark ? "#141420" : "#FFFFFF",
+                  backgroundColor: isDark ? "#101C35" : "#FFFFFF",
                   border: "1px solid",
-                  borderColor: isDark ? "#26263B" : "#EAE8E2",
-                  transition: "all 0.3s ease",
+                  borderColor: isDark ? "rgba(255, 255, 255, 0.12)" : "#E8E5DD",
+                  transition: "all 0.25s ease",
                   "&:hover": {
                     borderColor: "secondary.main",
-                    boxShadow: isDark
-                      ? "0 16px 36px -4px rgba(0, 0, 0, 0.4)"
-                      : "0 16px 32px -4px rgba(41, 39, 100, 0.08)",
                   },
                 }}
               >
-                {/* Header Row: Role, Company, Period */}
+                {/* Header Row */}
                 <Box
                   sx={{
                     display: "flex",
@@ -113,9 +111,9 @@ export default function Experience() {
                 >
                   <Box>
                     <Typography
-                      variant="h4"
+                      variant="h5"
                       sx={{
-                        fontSize: { xs: "1.3rem", sm: "1.5rem" },
+                        fontSize: { xs: "1.2rem", sm: "1.35rem" },
                         fontWeight: 700,
                         color: "text.primary",
                       }}
@@ -123,11 +121,11 @@ export default function Experience() {
                       {exp.role}
                     </Typography>
                     <Typography
-                      variant="subtitle1"
+                      variant="subtitle2"
                       sx={{
                         fontWeight: 600,
                         color: "secondary.main",
-                        fontSize: "1rem",
+                        fontSize: "0.95rem",
                       }}
                     >
                       {exp.company}
@@ -137,9 +135,8 @@ export default function Experience() {
                   <Box
                     sx={{
                       display: "flex",
-                      flexDirection: "column",
-                      alignItems: { xs: "flex-start", sm: "flex-end" },
-                      gap: 0.5,
+                      alignItems: "center",
+                      gap: 1.5,
                     }}
                   >
                     <Box
@@ -147,8 +144,8 @@ export default function Experience() {
                         display: "flex",
                         alignItems: "center",
                         gap: 0.75,
-                        px: 1.5,
-                        py: 0.4,
+                        px: 1.4,
+                        py: 0.35,
                         borderRadius: "20px",
                         backgroundColor: isDark
                           ? "rgba(184, 149, 85, 0.12)"
@@ -162,7 +159,7 @@ export default function Experience() {
                         variant="caption"
                         sx={{
                           fontFamily: "var(--font-mono)",
-                          fontSize: "0.74rem",
+                          fontSize: "0.72rem",
                           fontWeight: 700,
                           color: "secondary.main",
                         }}
@@ -171,7 +168,7 @@ export default function Experience() {
                       </Typography>
                     </Box>
 
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                    <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center", gap: 0.5 }}>
                       <MapPin size={12} color="#777777" />
                       <Typography variant="caption" sx={{ color: "text.secondary", fontSize: "0.75rem" }}>
                         {exp.location}
@@ -180,104 +177,28 @@ export default function Experience() {
                   </Box>
                 </Box>
 
-                {/* Description */}
-                <Typography
-                  variant="body1"
+                {/* Scannable Bullet Points */}
+                <Box
+                  component="ul"
                   sx={{
-                    color: "text.secondary",
-                    lineHeight: 1.7,
-                    fontSize: { xs: "0.92rem", md: "0.98rem" },
-                    mb: 3,
+                    pl: 2.5,
+                    m: 0,
+                    mb: 2.5,
+                    "& li": {
+                      fontSize: "0.88rem",
+                      color: "text.secondary",
+                      lineHeight: 1.6,
+                      mb: 0.8,
+                    },
                   }}
                 >
-                  {exp.description}
-                </Typography>
-
-                {/* Responsibilities */}
-                <Typography
-                  variant="caption"
-                  sx={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.72rem",
-                    fontWeight: 700,
-                    color: "secondary.main",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    display: "block",
-                    mb: 1.5,
-                  }}
-                >
-                  Key Responsibilities:
-                </Typography>
-
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mb: 3 }}>
                   {exp.responsibilities.map((resp, rIdx) => (
-                    <Box key={rIdx} sx={{ display: "flex", alignItems: "flex-start", gap: 1.2 }}>
-                      <CheckCircle2
-                        size={15}
-                        color={isDark ? "#8580FF" : "#292764"}
-                        style={{ marginTop: "3px", flexShrink: 0 }}
-                      />
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "text.primary", fontSize: "0.88rem", lineHeight: 1.55 }}
-                      >
-                        {resp}
-                      </Typography>
-                    </Box>
+                    <li key={rIdx}>{resp}</li>
                   ))}
                 </Box>
 
-                {/* Major Contributions */}
-                {exp.majorContributions.length > 0 && (
-                  <Box
-                    sx={{
-                      p: 2,
-                      borderRadius: 2,
-                      backgroundColor: isDark
-                        ? "rgba(133, 128, 255, 0.05)"
-                        : "rgba(41, 39, 100, 0.03)",
-                      border: "1px solid",
-                      borderColor: "divider",
-                      mb: 3,
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                      <Award size={15} color="#B89555" />
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          fontFamily: "var(--font-mono)",
-                          fontWeight: 700,
-                          fontSize: "0.72rem",
-                          color: "text.primary",
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        Major Engineering Contributions:
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: 0.75 }}>
-                      {exp.majorContributions.map((contrib, cIdx) => (
-                        <Typography
-                          key={cIdx}
-                          variant="caption"
-                          sx={{
-                            color: "text.secondary",
-                            fontSize: "0.82rem",
-                            lineHeight: 1.5,
-                            display: "block",
-                          }}
-                        >
-                          &bull; {contrib}
-                        </Typography>
-                      ))}
-                    </Box>
-                  </Box>
-                )}
-
-                {/* Technologies Used */}
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                {/* Technologies Used Pills */}
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.8 }}>
                   {exp.technologies.map((t) => (
                     <Box
                       key={t}
@@ -290,7 +211,7 @@ export default function Experience() {
                         borderColor: "divider",
                         fontFamily: "var(--font-mono)",
                         fontSize: "0.72rem",
-                        color: "text.secondary",
+                        color: "text.primary",
                       }}
                     >
                       {t}

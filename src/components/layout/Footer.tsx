@@ -1,19 +1,17 @@
 "use client";
 
 import React from "react";
-import { Box, Container, Typography, Grid, IconButton, Tooltip, Divider } from "@mui/material";
-import { ArrowUp, Github, Linkedin, Mail, Heart } from "lucide-react";
+import { Box, Container, Typography, IconButton, Tooltip, Divider } from "@mui/material";
+import { ArrowUp, Github, Linkedin, Mail } from "lucide-react";
 import { personalData } from "@/data/personal";
 import { useAppTheme } from "@/theme/ThemeContext";
 
 const navLinks = [
   { label: "Home", href: "#hero" },
   { label: "About", href: "#about" },
-  { label: "Expertise", href: "#expertise" },
   { label: "Projects", href: "#projects" },
-  { label: "Strengths", href: "#strengths" },
+  { label: "Skills", href: "#skills" },
   { label: "Experience", href: "#experience" },
-  { label: "Workflow", href: "#workflow" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -35,7 +33,7 @@ export default function Footer() {
         pb: { xs: 5, md: 6 },
         borderTop: "1px solid",
         borderColor: "divider",
-        backgroundColor: isDark ? "#0A0A10" : "#F4F2EC",
+        backgroundColor: isDark ? "#060B17" : "#F4F2EC",
         overflow: "hidden",
       }}
     >
@@ -54,16 +52,23 @@ export default function Footer() {
       >
         <path
           fill="none"
-          stroke={isDark ? "#8580FF" : "#292764"}
+          stroke={isDark ? "#9490FF" : "#292764"}
           strokeWidth="2"
           d="M0,192L48,197.3C96,203,192,213,288,192C384,171,480,117,576,122.7C672,128,768,192,864,208C960,224,1056,192,1152,165.3C1248,139,1344,117,1392,106.7L1440,96"
         />
       </svg>
 
-      <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1 }}>
-        <Grid container spacing={4} justifyContent="space-between" sx={{ mb: 6 }}>
+      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1.2fr 1fr 0.8fr" },
+            gap: { xs: 4, md: 6 },
+            mb: 6,
+          }}
+        >
           {/* Logo & Bio */}
-          <Grid item xs={12} md={5}>
+          <Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}>
               <Box
                 sx={{
@@ -71,7 +76,7 @@ export default function Footer() {
                   height: 36,
                   borderRadius: "8px",
                   background: isDark
-                    ? "linear-gradient(135deg, #8580FF 0%, #292764 100%)"
+                    ? "linear-gradient(135deg, #9490FF 0%, #292764 100%)"
                     : "linear-gradient(135deg, #292764 0%, #3e3b8a 100%)",
                   display: "flex",
                   alignItems: "center",
@@ -95,12 +100,12 @@ export default function Footer() {
               variant="body2"
               sx={{
                 color: "text.secondary",
-                maxWidth: "420px",
+                maxWidth: "380px",
                 lineHeight: 1.7,
-                mb: 2.5,
+                mb: 2,
               }}
             >
-              Frontend-focused Full-Stack Developer specializing in React.js, Next.js and enterprise application architectures. Engineered with precision and built for scale.
+              Senior Frontend-Focused Full-Stack Developer with 5+ years of commercial experience architecting enterprise B2B travel platforms, low-latency state engines, and client-side document processing systems.
             </Typography>
 
             <Typography
@@ -114,10 +119,10 @@ export default function Footer() {
             >
               {personalData.positioning}
             </Typography>
-          </Grid>
+          </Box>
 
           {/* Quick Links */}
-          <Grid item xs={12} sm={6} md={4}>
+          <Box>
             <Typography
               variant="caption"
               sx={{
@@ -133,29 +138,34 @@ export default function Footer() {
               Navigation
             </Typography>
 
-            <Grid container spacing={1}>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 1.2,
+              }}
+            >
               {navLinks.map((item) => (
-                <Grid item xs={6} key={item.label}>
-                  <Box
-                    component="a"
-                    href={item.href}
-                    sx={{
-                      textDecoration: "none",
-                      color: "text.secondary",
-                      fontSize: "0.88rem",
-                      transition: "color 0.2s ease",
-                      "&:hover": { color: "secondary.main" },
-                    }}
-                  >
-                    {item.label}
-                  </Box>
-                </Grid>
+                <Box
+                  key={item.label}
+                  component="a"
+                  href={item.href}
+                  sx={{
+                    textDecoration: "none",
+                    color: "text.secondary",
+                    fontSize: "0.88rem",
+                    transition: "color 0.2s ease",
+                    "&:hover": { color: "secondary.main" },
+                  }}
+                >
+                  {item.label}
+                </Box>
               ))}
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
 
           {/* Connect & Back to top */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Box>
             <Typography
               variant="caption"
               sx={{
@@ -240,12 +250,12 @@ export default function Footer() {
               <span>Back to top</span>
               <ArrowUp size={15} />
             </Box>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         <Divider sx={{ mb: 4 }} />
 
-        {/* Bottom Copyright & Location */}
+        {/* Bottom Copyright */}
         <Box
           sx={{
             display: "flex",
@@ -256,7 +266,7 @@ export default function Footer() {
           }}
         >
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
-            &copy; {currentYear} {personalData.name}. All rights reserved. Designed & built with React.js, Next.js & Material UI v5.
+            &copy; {currentYear} {personalData.name}. All rights reserved. Built with React.js, Next.js & Material UI v5.
           </Typography>
 
           <Typography

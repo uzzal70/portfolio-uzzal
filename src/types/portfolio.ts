@@ -2,7 +2,7 @@ export type ThemeMode = 'light' | 'dark';
 
 export type SkillLevel = 'Primary' | 'Working Knowledge' | 'Familiarity';
 
-export type ProjectStatus = 'Completed' | 'In Progress' | 'Prototype' | 'Concept';
+export type ProjectStatus = 'Completed' | 'Production' | 'Production Prototype' | 'In Progress' | 'Prototype' | 'Concept';
 
 export interface Technology {
   name: string;
@@ -96,3 +96,4 @@ export interface ContactFormData {
   subject: string;
   message: string;
 }
+

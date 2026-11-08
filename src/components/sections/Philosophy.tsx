@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Box, Container, Typography, Grid, Card, CardContent } from "@mui/material";
+import { Box, Container, Typography, Card, CardContent } from "@mui/material";
 import { motion } from "framer-motion";
 import {
   Code2,
@@ -38,11 +38,11 @@ export default function Philosophy() {
       id="philosophy"
       component="section"
       sx={{
-        py: { xs: 10, md: 14 },
+        py: { xs: 10, md: 15 },
         position: "relative",
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <SectionHeading
           badge={philosophyHeading.eyebrow}
           title={philosophyHeading.title}
@@ -55,93 +55,95 @@ export default function Philosophy() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", lg: "repeat(4, 1fr)" },
+            gap: 2.5,
+          }}
         >
-          <Grid container spacing={3}>
-            {philosophyPrinciples.map((item) => (
-              <Grid item xs={12} sm={6} lg={3} key={item.number}>
-                <Card
-                  component={motion.div}
-                  variants={fadeInUp}
+          {philosophyPrinciples.map((item) => (
+            <Card
+              key={item.number}
+              component={motion.div}
+              variants={fadeInUp}
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                p: 1,
+                borderRadius: 3,
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  borderColor: "secondary.main",
+                  transform: "translateY(-4px)",
+                },
+              }}
+            >
+              <CardContent sx={{ p: { xs: 2.5, md: 3 }, display: "flex", flexDirection: "column", height: "100%" }}>
+                <Box
                   sx={{
-                    height: "100%",
                     display: "flex",
-                    flexDirection: "column",
-                    p: 1,
-                    borderRadius: 3,
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      borderColor: "secondary.main",
-                      transform: "translateY(-4px)",
-                    },
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    mb: 2,
                   }}
                 >
-                  <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        mb: 2,
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: 42,
-                          height: 42,
-                          borderRadius: 2,
-                          backgroundColor: isDark
-                            ? "rgba(255, 255, 255, 0.04)"
-                            : "rgba(41, 39, 100, 0.04)",
-                          border: "1px solid",
-                          borderColor: "divider",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        {iconMap[item.icon] || <Sparkles size={22} color="#B89555" />}
-                      </Box>
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "0.82rem",
-                          fontWeight: 700,
-                          color: "secondary.main",
-                        }}
-                      >
-                        {item.number}
-                      </Typography>
-                    </Box>
+                  <Box
+                    sx={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: 2,
+                      backgroundColor: isDark
+                        ? "rgba(255, 255, 255, 0.04)"
+                        : "rgba(41, 39, 100, 0.04)",
+                      border: "1px solid",
+                      borderColor: "divider",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {iconMap[item.icon] || <Sparkles size={22} color="#B89555" />}
+                  </Box>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.82rem",
+                      fontWeight: 700,
+                      color: "secondary.main",
+                    }}
+                  >
+                    {item.number}
+                  </Typography>
+                </Box>
 
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: "1.05rem",
-                        color: "text.primary",
-                        mb: 1.2,
-                        lineHeight: 1.3,
-                      }}
-                    >
-                      {item.title}
-                    </Typography>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: "1.05rem",
+                    color: "text.primary",
+                    mb: 1.2,
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {item.title}
+                </Typography>
 
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "text.secondary",
-                        lineHeight: 1.6,
-                        fontSize: "0.86rem",
-                      }}
-                    >
-                      {item.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    lineHeight: 1.6,
+                    fontSize: "0.86rem",
+                  }}
+                >
+                  {item.description}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))}
         </Box>
       </Container>
     </Box>

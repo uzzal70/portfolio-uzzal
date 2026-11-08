@@ -66,3 +66,4 @@ export const certifications = [
     verificationUrl: "#",
   },
 ];
+

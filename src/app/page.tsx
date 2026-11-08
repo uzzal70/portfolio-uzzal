@@ -1,55 +1,55 @@
 import React from "react";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
-import Skills from "@/components/sections/Skills";
 import Projects from "@/components/sections/Projects";
-import Strengths from "@/components/sections/Strengths";
+import Skills from "@/components/sections/Skills";
 import Experience from "@/components/sections/Experience";
-import Workflow from "@/components/sections/Workflow";
-import Philosophy from "@/components/sections/Philosophy";
-import Education from "@/components/sections/Education";
-import GithubShowcase from "@/components/sections/GithubShowcase";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/layout/Footer";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
+
+function SectionDivider() {
+  return (
+    <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
+      <Box
+        sx={{
+          height: "1px",
+          width: "100%",
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.08) 20%, rgba(34, 184, 207, 0.3) 50%, rgba(255, 255, 255, 0.08) 80%, transparent 100%)",
+        }}
+      />
+    </Container>
+  );
+}
 
 export default function HomePage() {
   return (
     <Box component="main" sx={{ position: "relative", zIndex: 1 }}>
-      {/* Section 02: Hero Section */}
+      {/* 01. Hero Section — Apple-Grade Banner & Automated Workbenches */}
       <Hero />
+      <SectionDivider />
 
-      {/* Section 03: Professional Introduction */}
+      {/* 02. About Section — Background & Commercial Engineering Focus */}
       <About />
+      <SectionDivider />
 
-      {/* Section 04: Technical Expertise */}
-      <Skills />
-
-      {/* Section 05: Featured Projects */}
+      {/* 03. Project Showcase — 13 Production Ecosystem Platforms */}
       <Projects />
+      <SectionDivider />
 
-      {/* Section 06: My Engineering Strengths */}
-      <Strengths />
+      {/* 04. Technical Index — Grouped, Visual Skill Matrix */}
+      <Skills />
+      <SectionDivider />
 
-      {/* Section 07: Professional Experience */}
+      {/* 05. Commercial Experience — Compact Scannable Career Milestones */}
       <Experience />
+      <SectionDivider />
 
-      {/* Section 08: My Development Workflow */}
-      <Workflow />
-
-      {/* Section 09: Engineering Philosophy */}
-      <Philosophy />
-
-      {/* Section 10: Education & Continuous Learning */}
-      <Education />
-
-      {/* Section 11: GitHub & Development Activity */}
-      <GithubShowcase />
-
-      {/* Section 12: Contact Section */}
+      {/* 06. Contact Section — High-Conversion Direct Channels & Form */}
       <Contact />
 
-      {/* Section 13: Premium Footer */}
+      {/* 07. Studio Footer */}
       <Footer />
     </Box>
   );

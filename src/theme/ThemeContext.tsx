@@ -61,3 +61,4 @@ export const AppThemeProvider = ({ children }: { children: React.ReactNode }) =>
     </ThemeContext.Provider>
   );
 };
+

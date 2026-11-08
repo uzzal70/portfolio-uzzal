@@ -30,7 +30,7 @@ export default function SectionHeading({
       sx={{
         mb: { xs: 5, md: 7 },
         textAlign: isCenter ? "center" : "left",
-        maxWidth: isCenter ? "720px" : "800px",
+        maxWidth: isCenter ? "740px" : "840px",
         mx: isCenter ? "auto" : 0,
       }}
     >
@@ -40,15 +40,21 @@ export default function SectionHeading({
             display: "inline-flex",
             alignItems: "center",
             gap: 1.5,
-            mb: 1.5,
+            mb: 2,
+            px: 1.6,
+            py: 0.5,
+            borderRadius: "20px",
+            backgroundColor: "rgba(184, 149, 85, 0.1)",
+            border: "1px solid rgba(184, 149, 85, 0.25)",
           }}
         >
           <Box
             sx={{
-              width: 8,
-              height: 8,
+              width: 7,
+              height: 7,
               borderRadius: "50%",
               backgroundColor: "secondary.main",
+              boxShadow: "0 0 8px rgba(184, 149, 85, 0.6)",
             }}
           />
           <Typography
@@ -56,7 +62,8 @@ export default function SectionHeading({
             sx={{
               color: "secondary.main",
               fontWeight: 700,
-              letterSpacing: "0.15em",
+              letterSpacing: "0.14em",
+              lineHeight: 1,
             }}
           >
             {badge}
@@ -67,11 +74,12 @@ export default function SectionHeading({
       <Typography
         variant="h2"
         sx={{
-          fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" },
+          fontSize: { xs: "2rem", sm: "2.6rem", md: "3.2rem" },
           color: "text.primary",
           mb: subtitle ? 2 : 0,
           fontWeight: 600,
           lineHeight: 1.2,
+          letterSpacing: "-0.02em",
         }}
       >
         {title}
@@ -82,9 +90,9 @@ export default function SectionHeading({
           variant="body1"
           sx={{
             color: "text.secondary",
-            fontSize: { xs: "1rem", md: "1.1rem" },
-            lineHeight: 1.7,
-            maxWidth: isCenter ? "640px" : "680px",
+            fontSize: { xs: "1.02rem", md: "1.14rem" },
+            lineHeight: 1.75,
+            maxWidth: isCenter ? "640px" : "720px",
             mx: isCenter ? "auto" : 0,
           }}
         >
@@ -95,12 +103,12 @@ export default function SectionHeading({
       {/* Subtle gold accent underline */}
       <Box
         sx={{
-          width: 50,
-          height: "2px",
+          width: 48,
+          height: "3px",
+          borderRadius: "2px",
           backgroundColor: "secondary.main",
-          mt: 2.5,
+          mt: 3,
           mx: isCenter ? "auto" : 0,
-          opacity: 0.8,
         }}
       />
     </Box>

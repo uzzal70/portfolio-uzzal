@@ -5,11 +5,9 @@ import {
   Box,
   Container,
   Typography,
-  Grid,
   TextField,
   Button,
   Card,
-  CardContent,
   Alert,
   CircularProgress,
   IconButton,
@@ -22,10 +20,8 @@ import {
   Github,
   MapPin,
   Send,
-  CheckCircle2,
   Copy,
   Check,
-  Sparkles,
 } from "lucide-react";
 import SectionHeading from "../common/SectionHeading";
 import { personalData } from "@/data/personal";
@@ -102,10 +98,10 @@ export default function Contact() {
             particleCount: 70,
             spread: 60,
             origin: { y: 0.7 },
-            colors: ["#292764", "#B89555", "#8580FF"],
+            colors: ["#292764", "#B89555", "#9490FF"],
           });
         } catch {
-          // ignore confetti if canvas blocked
+          // ignore if canvas blocked
         }
       } else {
         setStatus({
@@ -134,313 +130,308 @@ export default function Contact() {
       id="contact"
       component="section"
       sx={{
-        py: { xs: 10, md: 14 },
+        py: { xs: 9, md: 13 },
         position: "relative",
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <SectionHeading
           badge="GET IN TOUCH"
           title="Have a Project in Mind? Let's Build Something Great."
           subtitle="I'm always interested in meaningful engineering challenges, product development opportunities and collaborations."
         />
 
-        <Grid container spacing={{ xs: 5, lg: 8 }}>
-          {/* Left Column: Direct Contacts & Channels */}
-          <Grid item xs={12} lg={5}>
-            <Box
-              component={motion.div}
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", lg: "0.9fr 1.1fr" },
+            gap: { xs: 5, lg: 8 },
+            alignItems: "start",
+          }}
+        >
+          {/* Left Column: Direct Contacts */}
+          <Box
+            component={motion.div}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+          >
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: 700,
+                fontSize: { xs: "1.35rem", md: "1.65rem" },
+                color: "text.primary",
+              }}
             >
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: 700,
-                  fontSize: { xs: "1.4rem", md: "1.7rem" },
-                  color: "text.primary",
-                }}
-              >
-                Let&apos;s Connect Directly
-              </Typography>
+              Let&apos;s Connect Directly
+            </Typography>
 
-              <Typography
-                variant="body1"
-                sx={{
-                  color: "text.secondary",
-                  lineHeight: 1.7,
-                  fontSize: "1rem",
-                }}
-              >
-                Whether you have an enterprise frontend challenge, a scalable travel tech system to build, or a full-stack engineering opening, feel free to reach out.
-              </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                color: "text.secondary",
+                lineHeight: 1.7,
+                fontSize: "1rem",
+              }}
+            >
+              Whether you have an enterprise frontend challenge, a scalable travel tech system to build, or a full-stack engineering opening, feel free to reach out.
+            </Typography>
 
-              {/* Email Card with Copy button */}
-              <Box
-                sx={{
-                  p: 2.5,
-                  borderRadius: 3,
-                  backgroundColor: isDark ? "#141420" : "#FFFFFF",
-                  border: "1px solid",
-                  borderColor: "divider",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                  <Box
-                    sx={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: 2,
-                      backgroundColor: isDark
-                        ? "rgba(184, 149, 85, 0.15)"
-                        : "rgba(184, 149, 85, 0.1)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Mail size={20} color="#B89555" />
-                  </Box>
-                  <Box>
-                    <Typography variant="caption" sx={{ color: "text.secondary", display: "block" }}>
-                      Direct Email
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      component="a"
-                      href={`mailto:${personalData.email}`}
-                      sx={{
-                        fontWeight: 600,
-                        color: "text.primary",
-                        textDecoration: "none",
-                        "&:hover": { color: "secondary.main" },
-                      }}
-                    >
-                      {personalData.email}
-                    </Typography>
-                  </Box>
-                </Box>
-
-                <Tooltip title={copied ? "Copied!" : "Copy Email"}>
-                  <IconButton onClick={handleCopyEmail} size="small">
-                    {copied ? <Check size={18} color="#22C55E" /> : <Copy size={18} />}
-                  </IconButton>
-                </Tooltip>
-              </Box>
-
-              {/* Location Card */}
-              <Box
-                sx={{
-                  p: 2.5,
-                  borderRadius: 3,
-                  backgroundColor: isDark ? "#141420" : "#FFFFFF",
-                  border: "1px solid",
-                  borderColor: "divider",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 2,
-                }}
-              >
+            {/* Email Card with Copy button */}
+            <Box
+              sx={{
+                p: 2.5,
+                borderRadius: 3,
+                backgroundColor: isDark ? "#101C35" : "#FFFFFF",
+                border: "1px solid",
+                borderColor: "divider",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                 <Box
                   sx={{
                     width: 44,
                     height: 44,
                     borderRadius: 2,
                     backgroundColor: isDark
-                      ? "rgba(133, 128, 255, 0.15)"
-                      : "rgba(41, 39, 100, 0.08)",
+                      ? "rgba(184, 149, 85, 0.15)"
+                      : "rgba(184, 149, 85, 0.1)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <MapPin size={20} color="#8580FF" />
+                  <Mail size={20} color="#B89555" />
                 </Box>
                 <Box>
                   <Typography variant="caption" sx={{ color: "text.secondary", display: "block" }}>
-                    Location
+                    Direct Email
                   </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary" }}>
-                    {personalData.location}
+                  <Typography
+                    variant="body1"
+                    component="a"
+                    href={`mailto:${personalData.email}`}
+                    sx={{
+                      fontWeight: 600,
+                      color: "text.primary",
+                      textDecoration: "none",
+                      "&:hover": { color: "secondary.main" },
+                    }}
+                  >
+                    {personalData.email}
                   </Typography>
                 </Box>
               </Box>
 
-              {/* Social Channels */}
-              <Box sx={{ pt: 1 }}>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 700,
-                    color: "secondary.main",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    display: "block",
-                    mb: 2,
-                  }}
-                >
-                  Professional Networks
-                </Typography>
-
-                <Box sx={{ display: "flex", gap: 2 }}>
-                  <Button
-                    component="a"
-                    href={personalData.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variant="outlined"
-                    startIcon={<Linkedin size={16} />}
-                  >
-                    LinkedIn
-                  </Button>
-
-                  <Button
-                    component="a"
-                    href={personalData.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variant="outlined"
-                    startIcon={<Github size={16} />}
-                  >
-                    GitHub
-                  </Button>
-                </Box>
-              </Box>
+              <Tooltip title={copied ? "Copied!" : "Copy Email"}>
+                <IconButton onClick={handleCopyEmail} size="small">
+                  {copied ? <Check size={18} color="#22C55E" /> : <Copy size={18} />}
+                </IconButton>
+              </Tooltip>
             </Box>
-          </Grid>
 
-          {/* Right Column: Interactive Contact Form */}
-          <Grid item xs={12} lg={7}>
-            <Card
-              component={motion.div}
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
+            {/* Location Card */}
+            <Box
               sx={{
-                p: { xs: 3, sm: 4.5 },
-                borderRadius: 4,
-                backgroundColor: isDark ? "#141420" : "#FFFFFF",
+                p: 2.5,
+                borderRadius: 3,
+                backgroundColor: isDark ? "#101C35" : "#FFFFFF",
                 border: "1px solid",
-                borderColor: isDark ? "#26263B" : "#EAE8E2",
+                borderColor: "divider",
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
               }}
             >
-              <form onSubmit={handleSubmit} noValidate>
-                {/* Honeypot field for spam prevention */}
-                <input
-                  type="text"
-                  name="honeypot"
-                  value={formData.honeypot}
+              <Box
+                sx={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 2,
+                  backgroundColor: isDark
+                    ? "rgba(148, 144, 255, 0.15)"
+                    : "rgba(41, 39, 100, 0.08)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <MapPin size={20} color="#8580FF" />
+              </Box>
+              <Box>
+                <Typography variant="caption" sx={{ color: "text.secondary", display: "block" }}>
+                  Location
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary" }}>
+                  {personalData.location}
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* Social Channels */}
+            <Box sx={{ pt: 1 }}>
+              <Typography
+                variant="caption"
+                sx={{
+                  fontFamily: "var(--font-mono)",
+                  fontWeight: 700,
+                  color: "secondary.main",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  display: "block",
+                  mb: 2,
+                }}
+              >
+                Professional Networks
+              </Typography>
+
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Button
+                  component="a"
+                  href={personalData.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="outlined"
+                  startIcon={<Linkedin size={16} />}
+                >
+                  LinkedIn
+                </Button>
+
+                <Button
+                  component="a"
+                  href={personalData.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="outlined"
+                  startIcon={<Github size={16} />}
+                >
+                  GitHub
+                </Button>
+              </Box>
+            </Box>
+          </Box>
+
+          {/* Right Column: Contact Form */}
+          <Card
+            component={motion.div}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            sx={{
+              p: { xs: 3, sm: 4 },
+              borderRadius: 4,
+              backgroundColor: isDark ? "#101C35" : "#FFFFFF",
+              border: "1px solid",
+              borderColor: isDark ? "rgba(255, 255, 255, 0.12)" : "#E8E5DD",
+            }}
+          >
+            <form onSubmit={handleSubmit} noValidate>
+              <input
+                type="text"
+                name="honeypot"
+                value={formData.honeypot}
+                onChange={handleChange}
+                style={{ display: "none" }}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                    gap: 2,
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    label="Your Name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    error={!!errors.name}
+                    helperText={errors.name}
+                    required
+                  />
+
+                  <TextField
+                    fullWidth
+                    label="Email Address"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    error={!!errors.email}
+                    helperText={errors.email}
+                    required
+                  />
+                </Box>
+
+                <TextField
+                  fullWidth
+                  label="Subject"
+                  name="subject"
+                  value={formData.subject}
                   onChange={handleChange}
-                  style={{ display: "none" }}
-                  tabIndex={-1}
-                  autoComplete="off"
+                  error={!!errors.subject}
+                  helperText={errors.subject}
+                  required
                 />
 
-                <Grid container spacing={2.5}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Your Name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      error={!!errors.name}
-                      helperText={errors.name}
-                      required
-                    />
-                  </Grid>
+                <TextField
+                  fullWidth
+                  label="Message"
+                  name="message"
+                  multiline
+                  rows={5}
+                  value={formData.message}
+                  onChange={handleChange}
+                  error={!!errors.message}
+                  helperText={errors.message}
+                  placeholder="Tell me about your project, team, or opportunity..."
+                  required
+                />
 
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Email Address"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      error={!!errors.email}
-                      helperText={errors.email}
-                      required
-                    />
-                  </Grid>
+                {status.type && (
+                  <Alert severity={status.type} sx={{ borderRadius: 2 }}>
+                    {status.message}
+                  </Alert>
+                )}
 
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      error={!!errors.subject}
-                      helperText={errors.subject}
-                      required
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Message"
-                      name="message"
-                      multiline
-                      rows={5}
-                      value={formData.message}
-                      onChange={handleChange}
-                      error={!!errors.message}
-                      helperText={errors.message}
-                      placeholder="Tell me about your project, team, or opportunity..."
-                      required
-                    />
-                  </Grid>
-
-                  {status.type && (
-                    <Grid item xs={12}>
-                      <Alert
-                        severity={status.type}
-                        sx={{
-                          borderRadius: 2,
-                        }}
-                      >
-                        {status.message}
-                      </Alert>
-                    </Grid>
-                  )}
-
-                  <Grid item xs={12}>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      size="large"
-                      disabled={loading}
-                      endIcon={
-                        loading ? (
-                          <CircularProgress size={18} color="inherit" />
-                        ) : (
-                          <Send size={18} />
-                        )
-                      }
-                      sx={{
-                        px: 4,
-                        py: 1.4,
-                        fontSize: "0.95rem",
-                      }}
-                    >
-                      {loading ? "Sending Message..." : "Send Message"}
-                    </Button>
-                  </Grid>
-                </Grid>
-              </form>
-            </Card>
-          </Grid>
-        </Grid>
+                <Box>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    disabled={loading}
+                    endIcon={
+                      loading ? (
+                        <CircularProgress size={18} color="inherit" />
+                      ) : (
+                        <Send size={18} />
+                      )
+                    }
+                    sx={{
+                      px: 4,
+                      py: 1.4,
+                      fontSize: "0.95rem",
+                    }}
+                  >
+                    {loading ? "Sending Message..." : "Send Message"}
+                  </Button>
+                </Box>
+              </Box>
+            </form>
+          </Card>
+        </Box>
       </Container>
     </Box>
   );

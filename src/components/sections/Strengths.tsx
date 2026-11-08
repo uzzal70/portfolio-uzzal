@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Box, Container, Grid, Typography, Card, CardContent } from "@mui/material";
+import { Box, Container, Typography, Card, CardContent } from "@mui/material";
 import { motion } from "framer-motion";
 import {
   LayoutGrid,
@@ -35,11 +35,11 @@ export default function Strengths() {
       id="strengths"
       component="section"
       sx={{
-        py: { xs: 10, md: 14 },
+        py: { xs: 10, md: 15 },
         position: "relative",
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <SectionHeading
           badge="ENGINEERING MATURITY"
           title="Core Engineering Strengths"
@@ -52,123 +52,125 @@ export default function Strengths() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", lg: "repeat(3, 1fr)" },
+            gap: 3,
+          }}
         >
-          <Grid container spacing={3}>
-            {engineeringStrengths.map((item, index) => (
-              <Grid item xs={12} sm={6} lg={4} key={item.id}>
-                <Card
-                  component={motion.div}
-                  variants={fadeInUp}
+          {engineeringStrengths.map((item, index) => (
+            <Card
+              key={item.id}
+              component={motion.div}
+              variants={fadeInUp}
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                p: 1,
+                borderRadius: 3,
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  borderColor: "secondary.main",
+                  transform: "translateY(-4px)",
+                  boxShadow: isDark
+                    ? "0 16px 36px -4px rgba(148, 144, 255, 0.15)"
+                    : "0 16px 32px -4px rgba(41, 39, 100, 0.1)",
+                },
+              }}
+            >
+              <CardContent sx={{ p: { xs: 2.5, md: 3 }, flexGrow: 1, display: "flex", flexDirection: "column" }}>
+                {/* Icon & Index */}
+                <Box
                   sx={{
-                    height: "100%",
                     display: "flex",
-                    flexDirection: "column",
-                    p: { xs: 1, md: 1.5 },
-                    borderRadius: 3,
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      borderColor: "secondary.main",
-                      transform: "translateY(-4px)",
-                      boxShadow: isDark
-                        ? "0 16px 36px -4px rgba(133, 128, 255, 0.15)"
-                        : "0 16px 32px -4px rgba(41, 39, 100, 0.1)",
-                    },
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    mb: 2.5,
                   }}
                 >
-                  <CardContent sx={{ p: { xs: 2.5, md: 3 }, flexGrow: 1 }}>
-                    {/* Icon & Index */}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        mb: 2.5,
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: 46,
-                          height: 46,
-                          borderRadius: 2,
-                          backgroundColor: isDark
-                            ? "rgba(255, 255, 255, 0.04)"
-                            : "rgba(41, 39, 100, 0.04)",
-                          border: "1px solid",
-                          borderColor: "divider",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        {iconMap[item.icon] || <LayoutGrid size={24} color="#B89555" />}
-                      </Box>
+                  <Box
+                    sx={{
+                      width: 46,
+                      height: 46,
+                      borderRadius: 2,
+                      backgroundColor: isDark
+                        ? "rgba(255, 255, 255, 0.04)"
+                        : "rgba(41, 39, 100, 0.04)",
+                      border: "1px solid",
+                      borderColor: "divider",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {iconMap[item.icon] || <LayoutGrid size={24} color="#B89555" />}
+                  </Box>
 
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.78rem",
+                      fontWeight: 700,
+                      color: "secondary.main",
+                    }}
+                  >
+                    0{index + 1}
+                  </Typography>
+                </Box>
+
+                {/* Title */}
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: "1.18rem",
+                    color: "text.primary",
+                    mb: 1,
+                  }}
+                >
+                  {item.title}
+                </Typography>
+
+                {/* Summary */}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    lineHeight: 1.6,
+                    mb: 2.5,
+                    fontSize: "0.88rem",
+                  }}
+                >
+                  {item.summary}
+                </Typography>
+
+                {/* Bullet Points */}
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: "auto" }}>
+                  {item.points.map((pt, pIdx) => (
+                    <Box key={pIdx} sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
+                      <Check
+                        size={14}
+                        color="#B89555"
+                        style={{ marginTop: "4px", flexShrink: 0 }}
+                      />
                       <Typography
                         variant="caption"
                         sx={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "0.78rem",
-                          fontWeight: 700,
-                          color: "secondary.main",
+                          color: "text.primary",
+                          fontSize: "0.82rem",
+                          lineHeight: 1.45,
                         }}
                       >
-                        0{index + 1}
+                        {pt}
                       </Typography>
                     </Box>
-
-                    {/* Title */}
-                    <Typography
-                      variant="h5"
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: "1.2rem",
-                        color: "text.primary",
-                        mb: 1,
-                      }}
-                    >
-                      {item.title}
-                    </Typography>
-
-                    {/* Summary */}
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "text.secondary",
-                        lineHeight: 1.6,
-                        mb: 2.5,
-                        fontSize: "0.88rem",
-                      }}
-                    >
-                      {item.summary}
-                    </Typography>
-
-                    {/* Bullet Points */}
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                      {item.points.map((pt, pIdx) => (
-                        <Box key={pIdx} sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
-                          <Check
-                            size={14}
-                            color="#B89555"
-                            style={{ marginTop: "4px", flexShrink: 0 }}
-                          />
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: "text.primary",
-                              fontSize: "0.8rem",
-                              lineHeight: 1.45,
-                            }}
-                          >
-                            {pt}
-                          </Typography>
-                        </Box>
-                      ))}
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+                  ))}
+                </Box>
+              </CardContent>
+            </Card>
+          ))}
         </Box>
       </Container>
     </Box>

@@ -1,9 +1,9 @@
 import { RepositoryItem } from "@/types/portfolio";
 
 export const githubProfile = {
-  username: "uzzaldev",
-  profileUrl: "https://github.com/uzzaldev",
-  bio: "Frontend-focused Full-Stack Developer building scalable web applications with React, Next.js, TypeScript & Node.",
+  username: "uzzal70",
+  profileUrl: "https://github.com/uzzal70",
+  bio: "Senior Frontend-Focused Full-Stack Developer building scalable web applications with React, Next.js, TypeScript & Node.",
   stats: {
     publicRepos: 28,
     primaryLanguages: ["TypeScript", "JavaScript", "React", "Node.js"],
@@ -19,7 +19,7 @@ export const featuredRepositories: RepositoryItem[] = [
     languageColor: "#3178C6",
     stars: 14,
     forks: 3,
-    url: "https://github.com/uzzaldev/passport-ocr-scanner-prototype",
+    url: "https://github.com/uzzal70/passport-ocr-scanner-prototype",
     isFeatured: true,
     tags: ["React", "Tesseract.js", "MRZ", "OCR", "Web Worker"],
   },
@@ -31,7 +31,7 @@ export const featuredRepositories: RepositoryItem[] = [
     languageColor: "#3178C6",
     stars: 22,
     forks: 5,
-    url: "https://github.com/uzzaldev/b2b-travel-flight-search-ui",
+    url: "https://github.com/uzzal70/b2b-travel-flight-search-ui",
     isFeatured: true,
     tags: ["React.js", "Redux Toolkit", "Material UI", "Enterprise UI"],
   },
@@ -43,7 +43,7 @@ export const featuredRepositories: RepositoryItem[] = [
     languageColor: "#F7DF1E",
     stars: 18,
     forks: 4,
-    url: "https://github.com/uzzaldev/flight-ticket-pdf-engine",
+    url: "https://github.com/uzzal70/flight-ticket-pdf-engine",
     isFeatured: true,
     tags: ["React", "@react-pdf/renderer", "PDF Generation"],
   },
@@ -55,7 +55,7 @@ export const featuredRepositories: RepositoryItem[] = [
     languageColor: "#3178C6",
     stars: 31,
     forks: 8,
-    url: "https://github.com/uzzaldev/nestjs-rbac-starter-core",
+    url: "https://github.com/uzzal70/nestjs-rbac-starter-core",
     isFeatured: true,
     tags: ["NestJS", "PostgreSQL", "TypeORM", "JWT", "RBAC"],
   },
@@ -67,8 +67,9 @@ export const featuredRepositories: RepositoryItem[] = [
     languageColor: "#3178C6",
     stars: 45,
     forks: 12,
-    url: "https://github.com/uzzaldev/react-mui-enterprise-boilerplate",
+    url: "https://github.com/uzzal70/react-mui-enterprise-boilerplate",
     isFeatured: true,
     tags: ["React", "Material UI v5", "TypeScript", "Theme System"],
   },
 ];
+

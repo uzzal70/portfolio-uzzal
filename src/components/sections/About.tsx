@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import { Box, Container, Grid, Typography, Card, CardContent } from "@mui/material";
+import { Box, Container, Typography, Card, CardContent } from "@mui/material";
 import { motion } from "framer-motion";
-import { Briefcase, Layers, Terminal, Sparkles, CheckCircle2, Compass } from "lucide-react";
+import { CheckCircle2, ArrowRight } from "lucide-react";
 import SectionHeading from "../common/SectionHeading";
 import { personalData } from "@/data/personal";
 import { useAppTheme } from "@/theme/ThemeContext";
-import { fadeInUp, staggerContainer } from "../animation/MotionWrapper";
+import { fadeInUp } from "../animation/MotionWrapper";
 
 export default function About() {
   const { mode } = useAppTheme();
@@ -18,174 +18,176 @@ export default function About() {
       id="about"
       component="section"
       sx={{
-        py: { xs: 10, md: 14 },
+        py: { xs: 9, md: 13 },
         position: "relative",
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <SectionHeading
-          badge="ABOUT MY WORK"
-          title={personalData.about.heading}
-          subtitle="Combining high-standard frontend craftsmanship with practical full-stack execution."
+          badge="BACKGROUND & APPROACH"
+          title="Engineering Focused on Production Resilience"
+          subtitle="A practical balance of frontend craftsmanship, enterprise domain architecture, and full lifecycle ownership."
         />
 
-        <Grid container spacing={{ xs: 5, lg: 8 }} alignItems="stretch">
-          {/* Left Column: Narrative paragraphs & Philosophy */}
-          <Grid item xs={12} lg={7}>
-            <Box
-              component={motion.div}
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", lg: "1.15fr 0.85fr" },
+            gap: { xs: 5, lg: 8 },
+            alignItems: "start",
+          }}
+        >
+          {/* Left Column: Focused Narrative */}
+          <Box
+            component={motion.div}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2.5,
+            }}
+          >
+            <Typography
+              variant="body1"
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 2.5,
+                fontSize: { xs: "1.02rem", md: "1.12rem" },
+                lineHeight: 1.8,
+                color: "text.primary",
+                fontWeight: 500,
               }}
             >
-              {personalData.about.paragraphs.map((p, idx) => (
-                <Typography
-                  key={idx}
-                  variant="body1"
-                  sx={{
-                    fontSize: { xs: "1.02rem", md: "1.12rem" },
-                    lineHeight: 1.8,
-                    color: "text.secondary",
-                  }}
-                >
-                  {p}
-                </Typography>
-              ))}
+              I am a frontend-focused Full-Stack Developer with 5+ years of professional experience building business-critical web applications.
+            </Typography>
 
-              {/* Working Philosophy Callout Card */}
-              <Box
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: { xs: "0.98rem", md: "1.05rem" },
+                lineHeight: 1.75,
+                color: "text.secondary",
+              }}
+            >
+              My primary expertise centers on modern React.js architecture, reusable design system components, strict TypeScript typing, state management with Redux Toolkit, and resilient REST API integration. In high-frequency enterprise environments like B2B travel portals, I focus on predictable state flows, fast rendering budgets, and intuitive workflows.
+            </Typography>
+
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: { xs: "0.98rem", md: "1.05rem" },
+                lineHeight: 1.75,
+                color: "text.secondary",
+              }}
+            >
+              Alongside frontend engineering, I work practically with Node.js, NestJS, and PostgreSQL. This working full-stack background allows me to design clean API contracts, manage JWT authentication and role-based guards, and collaborate seamlessly across the entire application lifecycle.
+            </Typography>
+
+            {/* Core Principle Callout */}
+            <Box
+              sx={{
+                mt: 1.5,
+                p: { xs: 2.5, md: 3 },
+                borderRadius: 2.5,
+                backgroundColor: isDark
+                  ? "rgba(184, 149, 85, 0.08)"
+                  : "rgba(184, 149, 85, 0.06)",
+                borderLeft: "3px solid",
+                borderColor: "secondary.main",
+              }}
+            >
+              <Typography
+                variant="body2"
                 sx={{
-                  mt: 2,
-                  p: { xs: 3, md: 3.5 },
-                  borderRadius: 3,
-                  backgroundColor: isDark
-                    ? "rgba(184, 149, 85, 0.08)"
-                    : "rgba(184, 149, 85, 0.06)",
-                  border: "1px solid",
-                  borderColor: isDark
-                    ? "rgba(184, 149, 85, 0.25)"
-                    : "rgba(184, 149, 85, 0.2)",
-                  position: "relative",
-                  overflow: "hidden",
+                  fontStyle: "italic",
+                  color: "text.primary",
+                  fontSize: { xs: "0.94rem", md: "0.98rem" },
+                  lineHeight: 1.65,
                 }}
               >
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: 12,
-                    right: 16,
-                    color: "secondary.main",
-                    opacity: 0.3,
-                  }}
-                >
-                  <Compass size={40} />
-                </Box>
-                <Typography
-                  variant="overline"
-                  sx={{
-                    color: "secondary.main",
-                    fontWeight: 700,
-                    letterSpacing: "0.12em",
-                    display: "block",
-                    mb: 1,
-                  }}
-                >
-                  ENGINEERING PHILOSOPHY
-                </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    fontStyle: "italic",
-                    color: "text.primary",
-                    fontSize: { xs: "0.98rem", md: "1.05rem" },
-                    lineHeight: 1.7,
-                  }}
-                >
-                  &ldquo;{personalData.about.workingPhilosophy}&rdquo;
-                </Typography>
-              </Box>
+                &ldquo;Engineering maturity is not about introducing complexity; it is about creating systems that are reliable under production load, intuitive for users, and clean for teams to maintain.&rdquo;
+              </Typography>
             </Box>
-          </Grid>
+          </Box>
 
-          {/* Right Column: Key Metrics & Highlight Cards */}
-          <Grid item xs={12} lg={5}>
-            <Box
-              component={motion.div}
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              sx={{
-                display: "grid",
-                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                gap: 2.5,
-                height: "100%",
-              }}
-            >
-              {personalData.about.highlights.map((item, index) => (
-                <Card
-                  key={index}
-                  component={motion.div}
-                  variants={fadeInUp}
+          {/* Right Column: 4 Key Pillars */}
+          <Box
+            component={motion.div}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "1fr",
+              gap: 2,
+            }}
+          >
+            {[
+              {
+                number: "01",
+                title: "Frontend Architecture & Systems",
+                desc: "Modular component hierarchies with atomic design, strict TypeScript DTOs, and accessible design tokens.",
+              },
+              {
+                number: "02",
+                title: "B2B Travel & Enterprise Workflows",
+                desc: "Multi-brand white-label architecture, GDS flight booking pipelines, and per-segment baggage allocation.",
+              },
+              {
+                number: "03",
+                title: "Client-Side Document Processing",
+                desc: "In-browser OCR & ICAO 9303 MRZ extraction via Web Workers, plus dynamic vector airline PDF boarding pass generation.",
+              },
+              {
+                number: "04",
+                title: "Practical Full-Stack API Integration",
+                desc: "Node.js & NestJS backend integration, token refresh rotation, RBAC guards, and PostgreSQL relational modeling.",
+              },
+            ].map((pillar) => (
+              <Box
+                key={pillar.number}
+                sx={{
+                  p: 2.5,
+                  borderRadius: 2.5,
+                  backgroundColor: isDark ? "#101C35" : "#FFFFFF",
+                  border: "1px solid",
+                  borderColor: isDark ? "rgba(255, 255, 255, 0.12)" : "#E8E5DD",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 2,
+                  transition: "border-color 0.2s ease, transform 0.2s ease",
+                  "&:hover": {
+                    borderColor: "secondary.main",
+                    transform: "translateX(4px)",
+                  },
+                }}
+              >
+                <Typography
+                  variant="caption"
                   sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    p: 1,
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      borderColor: "secondary.main",
-                      transform: "translateY(-4px)",
-                    },
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "0.82rem",
+                    fontWeight: 700,
+                    color: "secondary.main",
+                    mt: 0.2,
                   }}
                 >
-                  <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
-                    <Typography
-                      variant="h3"
-                      sx={{
-                        color: "secondary.main",
-                        fontWeight: 700,
-                        fontSize: { xs: "1.8rem", md: "2.1rem" },
-                        mb: 1,
-                        fontFamily: "var(--font-serif)",
-                      }}
-                    >
-                      {item.metric}
-                    </Typography>
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        fontWeight: 700,
-                        color: "text.primary",
-                        fontSize: "0.92rem",
-                        mb: 0.75,
-                      }}
-                    >
-                      {item.label}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "text.secondary",
-                        fontSize: "0.82rem",
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {item.detail}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              ))}
-            </Box>
-          </Grid>
-        </Grid>
+                  {pillar.number}
+                </Typography>
+                <Box>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: "0.92rem", mb: 0.5 }}>
+                    {pillar.title}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: "text.secondary", fontSize: "0.82rem", lineHeight: 1.5, display: "block" }}>
+                    {pillar.desc}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Box>
       </Container>
     </Box>
   );

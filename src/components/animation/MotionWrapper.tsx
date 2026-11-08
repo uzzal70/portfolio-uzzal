@@ -76,3 +76,4 @@ export const MotionSection: React.FC<MotionSectionProps> = ({
     </motion.section>
   );
 };
+
