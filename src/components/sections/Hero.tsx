@@ -139,9 +139,9 @@ const works: Work[] = [
 
 const headlineLines = [
   "Interfaces for",
-  "flights, messages",
-  "and moving",
-  "vehicles.",
+  "B2B & B2C OTA, E-commerce",
+  "and more",
+  "products.",
 ];
 
 const facts = [
