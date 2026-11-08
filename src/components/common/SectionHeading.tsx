@@ -74,7 +74,7 @@ export default function SectionHeading({
       <Typography
         variant="h2"
         sx={{
-          fontSize: { xs: "2rem", sm: "2.6rem", md: "3.2rem" },
+          fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.5rem" },
           color: "text.primary",
           mb: subtitle ? 2 : 0,
           fontWeight: 600,

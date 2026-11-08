@@ -17,7 +17,7 @@ export const personalData = {
     headingLine1: "Engineering Resilient Digital Products",
     headingLine2: "With Deep Frontend Mastery.",
     description:
-      "Senior Frontend-Focused Full-Stack Developer with 5+ years of commercial experience architecting enterprise B2B travel platforms (TripFindy, Ticket Lagbe, Hotel Lagbe), cloud communications (GotiMail, GotiSMS), IoT fleet telematics (Safety GPS Tracker), and corporate compliance systems (AuditNext, Impressive Group).",
+      "Senior Frontend-Focused Full-Stack Developer with 5+ years of commercial experience architecting enterprise B2B travel platforms (TripFindy, Ticket Lagbe, B2B.FlightBlu, Hotel Lagbe), cloud communications (GotiMail, GotiSMS), IoT fleet telematics (Safety GPS Tracker), and corporate compliance systems (AuditNext, Impressive Group).",
     primaryTechs: [
       { name: "React 18", category: "Core Frontend" },
       { name: "Next.js (App Router)", category: "Full-Stack Architecture" },

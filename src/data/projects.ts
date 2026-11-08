@@ -602,15 +602,15 @@ export const projectsData: ProjectCaseStudy[] = [
   },
   {
     slug: "flightblu-corporate-travel-portal",
-    title: "FlightBlu (B2B & B2C)",
-    subtitle: "Corporate White-Label Airline Reservation Platform",
+    title: "B2B.FlightBlu",
+    subtitle: "Corporate White-Label B2B Airline Reservation Platform",
     category: "Travel Technology",
     status: "Production",
     featured: false,
     order: 11,
     previewImage: "/images/projects/flightblu.png",
     overview:
-      "A white-label airline booking solution delivering branded passenger booking interfaces, corporate travel expense reporting, and live GDS integration.",
+      "A dedicated corporate B2B white-label airline booking platform (b2b.flightblu.com) delivering branded passenger booking interfaces, corporate travel expense reporting, and live GDS integration.",
     problemStatement:
       "Corporate partners required custom-branded flight reservation portals with company-specific travel policies, approval workflows, and centralized invoicing.",
     technicalSolution:
@@ -648,7 +648,7 @@ export const projectsData: ProjectCaseStudy[] = [
         solution: "Implemented client-side policy evaluation rules that run synchronously upon flight selection.",
       },
     ],
-    liveDemoUrl: "https://flightblu.com",
+    liveDemoUrl: "https://b2b.flightblu.com",
     githubUrl: undefined,
     accentColor: "#0284C7",
   },
