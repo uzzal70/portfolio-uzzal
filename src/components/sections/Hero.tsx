@@ -523,7 +523,7 @@ export default function Hero() {
                 component="h1"
                 aria-label={headlineLines.join(" ")}
                 sx={{
-                  fontSize: { xs: "2rem", sm: "3rem", md: "3rem", lg: "3.5rem" },
+                  fontSize: { xs: "2rem", sm: "3rem", md: "3rem", lg: "3rem" },
                   fontWeight: 800,
                   lineHeight: 1.04,
                   letterSpacing: "-0.04em",
